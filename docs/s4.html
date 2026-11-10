@@ -1,0 +1,3396 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S4 · Testeo completo</title><link rel="stylesheet" href="estilos.css"></head><body><header><a class="brand" href="index.html">Demanda neta · material complementario</a><a href="index.html">Suplemento</a><a href="referencias.html">Referencias</a></header><div class="layout"><nav class="toc" aria-label="Índice del documento"><strong>Contenido</strong><a class="level2" href="#sec-s4-1">S4.1 Desempeño de enero de 2024</a><a class="level2" href="#sec-s4-2">S4.2 Desempeño de febrero de 2024</a><a class="level2" href="#sec-s4-3">S4.3 Desempeño de marzo de 2024</a><a class="level2" href="#sec-s4-4">S4.4 Desempeño de abril de 2024</a><a class="level2" href="#sec-s4-5">S4.5 Pérdida por semilla en el testeo completo</a><a class="level2" href="#sec-s4-6">S4.6 Frecuencias observadas de los tres cuantiles</a><a class="level2" href="#sec-s4-7">S4.7 Cobertura por contexto en el conjunto de testeo</a><a class="level4" href="#condiciones-solares-en-testeo">Condiciones solares en testeo</a><a class="level4" href="#dia-de-la-semana-en-testeo">Día de la semana en testeo</a><a class="level2" href="#sec-s4-8">S4.8 Cobertura y amplitud por hora durante el testeo</a><a class="level2" href="#sec-s4-9">S4.9 Diagnósticos adicionales de enero de 2024</a><a class="level2" href="#sec-s4-10">S4.10 Frecuencias de los cuantiles y puntuación de intervalo en enero</a><a class="level2" href="#sec-s4-11">S4.11 Pérdida por semilla en enero</a><a class="level2" href="#sec-s4-12">S4.12 Cobertura por contexto de Chronos-2 LoRA, LightGBM y LSTM en enero</a><a class="level2" href="#sec-s4-13">S4.13 Trayectorias de la segunda quincena de enero</a><a class="level2" href="#sec-s4-14">S4.14 Desviación de la cobertura en las veinticuatro horas</a></nav><main class="reading"><div class="review-note"><p>Versión del 10 de noviembre de 2026</p><div class="toolbar"><button data-font="-1">A−</button><button data-font="1">A+</button><button onclick="window.print()">Imprimir</button></div><label class="table-filter">Filtrar filas de cuadros <input data-filter-tables placeholder="Nombre de modelo o parámetro" aria-label="Filtrar filas de los cuadros"></label></div><article class="paper"><nav class="doc-nav"><a href="s1.html">S1</a><a href="s2.html">S2</a><a href="s3.html">S3</a><a href="s4.html">S4</a><a href="s5.html">S5</a><a href="s6.html">S6</a></nav><div><h1 id="suplemento-s4-resultados-completos-de-testeo">Suplemento S4. Resultados completos de testeo</h1>
+<p>Este suplemento desagrega los resultados del testeo de enero–abril de 2024 del capítulo 5. Las configuraciones elegidas en validación se conservaron y los modelos entrenables se reajustaron antes de cada mes con la historia disponible, según la Sección 4.9. Los calibradores incorporaron los errores después de observar cada día. A identifica el aprendizaje probabilístico directo; B, el pronóstico puntual con calibración conforme; y C, la calibración de los cuantiles del predictor de A.</p>
+<p>Se evaluaron 2.856 horas: 744 de enero, 672 de febrero, 744 de marzo y 696 de abril. Febrero excluye el día 4 y abril comprende los días 1 a 29. El agregado contiene 1.004 hogares en enero, 985 en febrero y marzo y 980 en abril. Todos los modelos comparten las mismas observaciones dentro de cada mes; el Cuadro 5.5 y el Anexo A documentan su disponibilidad y tratamiento. Las métricas de los cuadros mensuales se calculan por ejecución y se promedian cuando hay tres semillas.</p>
+<h2 id="sec-s4-1">S4.1 Desempeño de enero de 2024</h2>
+<p>El cuadro reúne los cuarenta y un modelos sobre las 744 horas y 1.004 hogares del mes. La pérdida pinball, el nMAE y la amplitud están normalizados; la cobertura se expresa como porcentaje de observaciones dentro del intervalo P5–P95.</p>
+<p class="caption" id="cuadro-s4-1"><strong>Cuadro S4.1. Desempeño del testeo de enero de 2024.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Pérdida pinball normalizada</th>
+  <th>nMAE P50</th>
+  <th>Cobertura observada</th>
+  <th>Amplitud normalizada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>0,015580</td>
+  <td>0,05729</td>
+  <td>87,28 %</td>
+  <td>0,252</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,015684</td>
+  <td>0,05729</td>
+  <td>91,04 %</td>
+  <td>0,279</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>0,015883</td>
+  <td>0,05769</td>
+  <td>90,91 %</td>
+  <td>0,259</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016506</td>
+  <td>0,06143</td>
+  <td>91,40 %</td>
+  <td>0,275</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>0,016830</td>
+  <td>0,06143</td>
+  <td>82,84 %</td>
+  <td>0,211</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016855</td>
+  <td>0,06377</td>
+  <td>91,40 %</td>
+  <td>0,285</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>0,016857</td>
+  <td>0,06070</td>
+  <td>92,43 %</td>
+  <td>0,292</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>0,016905</td>
+  <td>0,06377</td>
+  <td>78,09 %</td>
+  <td>0,199</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>0,017255</td>
+  <td>0,06543</td>
+  <td>87,63 %</td>
+  <td>0,275</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017277</td>
+  <td>0,06630</td>
+  <td>89,92 %</td>
+  <td>0,287</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>0,017347</td>
+  <td>0,06630</td>
+  <td>87,59 %</td>
+  <td>0,267</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017429</td>
+  <td>0,06558</td>
+  <td>89,25 %</td>
+  <td>0,272</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>0,017454</td>
+  <td>0,06584</td>
+  <td>88,04 %</td>
+  <td>0,245</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>0,017469</td>
+  <td>0,06393</td>
+  <td>92,03 %</td>
+  <td>0,299</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>0,017570</td>
+  <td>0,06558</td>
+  <td>85,66 %</td>
+  <td>0,234</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017574</td>
+  <td>0,06584</td>
+  <td>93,91 %</td>
+  <td>0,295</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017587</td>
+  <td>0,06665</td>
+  <td>90,82 %</td>
+  <td>0,285</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017694</td>
+  <td>0,06543</td>
+  <td>91,13 %</td>
+  <td>0,312</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>0,017769</td>
+  <td>0,06447</td>
+  <td>91,53 %</td>
+  <td>0,311</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>0,017783</td>
+  <td>0,06507</td>
+  <td>92,79 %</td>
+  <td>0,322</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>0,017869</td>
+  <td>0,06616</td>
+  <td>93,82 %</td>
+  <td>0,319</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017976</td>
+  <td>0,06616</td>
+  <td>90,73 %</td>
+  <td>0,313</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>0,017982</td>
+  <td>0,06910</td>
+  <td>88,98 %</td>
+  <td>0,260</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017983</td>
+  <td>0,06910</td>
+  <td>89,56 %</td>
+  <td>0,283</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>0,018003</td>
+  <td>0,06503</td>
+  <td>95,97 %</td>
+  <td>0,346</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018255</td>
+  <td>0,06616</td>
+  <td>91,26 %</td>
+  <td>0,324</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>0,018447</td>
+  <td>0,06830</td>
+  <td>89,11 %</td>
+  <td>0,303</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>0,018448</td>
+  <td>0,06616</td>
+  <td>94,76 %</td>
+  <td>0,353</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>0,018453</td>
+  <td>0,06684</td>
+  <td>94,09 %</td>
+  <td>0,331</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>0,018465</td>
+  <td>0,06665</td>
+  <td>97,54 %</td>
+  <td>0,382</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018541</td>
+  <td>0,06830</td>
+  <td>90,14 %</td>
+  <td>0,316</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>0,018724</td>
+  <td>0,07164</td>
+  <td>86,92 %</td>
+  <td>0,274</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018820</td>
+  <td>0,07164</td>
+  <td>90,28 %</td>
+  <td>0,295</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018868</td>
+  <td>0,07042</td>
+  <td>87,63 %</td>
+  <td>0,301</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>0,019043</td>
+  <td>0,07027</td>
+  <td>89,47 %</td>
+  <td>0,311</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>0,019063</td>
+  <td>0,07042</td>
+  <td>87,77 %</td>
+  <td>0,291</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>0,019187</td>
+  <td>0,06976</td>
+  <td>90,46 %</td>
+  <td>0,320</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>0,019189</td>
+  <td>0,06976</td>
+  <td>90,46 %</td>
+  <td>0,320</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>0,021298</td>
+  <td>0,07990</td>
+  <td>89,92 %</td>
+  <td>0,345</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>0,026861</td>
+  <td>0,10627</td>
+  <td>86,69 %</td>
+  <td>0,371</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>0,034409</td>
+  <td>0,12609</td>
+  <td>97,85 %</td>
+  <td>0,763</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de las predicciones de testeo.</em></p>
+<h2 id="sec-s4-2">S4.2 Desempeño de febrero de 2024</h2>
+<p>El cuadro reúne los cuarenta y un modelos sobre las 672 horas y 985 hogares del mes. La pérdida pinball, el nMAE y la amplitud están normalizados; la cobertura se expresa como porcentaje de observaciones dentro del intervalo P5–P95.</p>
+<p class="caption" id="cuadro-s4-2"><strong>Cuadro S4.2. Desempeño del testeo de febrero de 2024.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Pérdida pinball normalizada</th>
+  <th>nMAE P50</th>
+  <th>Cobertura observada</th>
+  <th>Amplitud normalizada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>0,016696</td>
+  <td>0,06388</td>
+  <td>88,69 %</td>
+  <td>0,270</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016785</td>
+  <td>0,06388</td>
+  <td>93,50 %</td>
+  <td>0,315</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>0,019455</td>
+  <td>0,07474</td>
+  <td>88,05 %</td>
+  <td>0,288</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>0,019791</td>
+  <td>0,07581</td>
+  <td>91,37 %</td>
+  <td>0,352</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019824</td>
+  <td>0,07581</td>
+  <td>91,52 %</td>
+  <td>0,372</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>0,020317</td>
+  <td>0,07816</td>
+  <td>89,58 %</td>
+  <td>0,324</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>0,020521</td>
+  <td>0,07673</td>
+  <td>88,84 %</td>
+  <td>0,322</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,020731</td>
+  <td>0,08317</td>
+  <td>87,60 %</td>
+  <td>0,317</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,021065</td>
+  <td>0,08094</td>
+  <td>86,46 %</td>
+  <td>0,320</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,021082</td>
+  <td>0,08233</td>
+  <td>86,66 %</td>
+  <td>0,307</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>0,021140</td>
+  <td>0,07988</td>
+  <td>88,89 %</td>
+  <td>0,336</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>0,021562</td>
+  <td>0,08317</td>
+  <td>82,39 %</td>
+  <td>0,287</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,021823</td>
+  <td>0,08852</td>
+  <td>88,29 %</td>
+  <td>0,307</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>0,021928</td>
+  <td>0,08414</td>
+  <td>91,17 %</td>
+  <td>0,363</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>0,022011</td>
+  <td>0,08094</td>
+  <td>74,26 %</td>
+  <td>0,250</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>0,022236</td>
+  <td>0,08143</td>
+  <td>89,83 %</td>
+  <td>0,350</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,022428</td>
+  <td>0,08335</td>
+  <td>88,44 %</td>
+  <td>0,387</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,022506</td>
+  <td>0,08526</td>
+  <td>87,15 %</td>
+  <td>0,351</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,022893</td>
+  <td>0,08915</td>
+  <td>86,86 %</td>
+  <td>0,314</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>0,023037</td>
+  <td>0,08233</td>
+  <td>72,72 %</td>
+  <td>0,225</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,023039</td>
+  <td>0,08872</td>
+  <td>83,18 %</td>
+  <td>0,293</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>0,023058</td>
+  <td>0,08915</td>
+  <td>82,54 %</td>
+  <td>0,283</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>0,023409</td>
+  <td>0,08526</td>
+  <td>77,93 %</td>
+  <td>0,296</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,023451</td>
+  <td>0,09287</td>
+  <td>90,18 %</td>
+  <td>0,379</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>0,023603</td>
+  <td>0,09117</td>
+  <td>88,19 %</td>
+  <td>0,381</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,023952</td>
+  <td>0,09287</td>
+  <td>82,29 %</td>
+  <td>0,320</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>0,023985</td>
+  <td>0,09287</td>
+  <td>91,37 %</td>
+  <td>0,395</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>0,024081</td>
+  <td>0,08872</td>
+  <td>72,42 %</td>
+  <td>0,236</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>0,024183</td>
+  <td>0,08335</td>
+  <td>77,88 %</td>
+  <td>0,339</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>0,024185</td>
+  <td>0,09287</td>
+  <td>79,61 %</td>
+  <td>0,309</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>0,024515</td>
+  <td>0,09443</td>
+  <td>87,65 %</td>
+  <td>0,394</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,024761</td>
+  <td>0,10007</td>
+  <td>87,05 %</td>
+  <td>0,378</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>0,025147</td>
+  <td>0,09672</td>
+  <td>86,46 %</td>
+  <td>0,363</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>0,025404</td>
+  <td>0,10007</td>
+  <td>93,75 %</td>
+  <td>0,463</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>0,025478</td>
+  <td>0,09813</td>
+  <td>89,29 %</td>
+  <td>0,420</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>0,025514</td>
+  <td>0,09817</td>
+  <td>89,43 %</td>
+  <td>0,420</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>0,025679</td>
+  <td>0,08852</td>
+  <td>63,54 %</td>
+  <td>0,215</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,027601</td>
+  <td>0,11553</td>
+  <td>87,55 %</td>
+  <td>0,382</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>0,029332</td>
+  <td>0,11599</td>
+  <td>83,04 %</td>
+  <td>0,380</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>0,029724</td>
+  <td>0,11553</td>
+  <td>74,60 %</td>
+  <td>0,335</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>0,066620</td>
+  <td>0,27033</td>
+  <td>85,86 %</td>
+  <td>0,836</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de las predicciones de testeo.</em></p>
+<h2 id="sec-s4-3">S4.3 Desempeño de marzo de 2024</h2>
+<p>El cuadro reúne los cuarenta y un modelos sobre las 744 horas y 985 hogares del mes. La pérdida pinball, el nMAE y la amplitud están normalizados; la cobertura se expresa como porcentaje de observaciones dentro del intervalo P5–P95.</p>
+<p class="caption" id="cuadro-s4-3"><strong>Cuadro S4.3. Desempeño del testeo de marzo de 2024.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Pérdida pinball normalizada</th>
+  <th>nMAE P50</th>
+  <th>Cobertura observada</th>
+  <th>Amplitud normalizada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>0,014648</td>
+  <td>0,05542</td>
+  <td>91,67 %</td>
+  <td>0,273</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,014783</td>
+  <td>0,05660</td>
+  <td>93,28 %</td>
+  <td>0,266</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>0,014919</td>
+  <td>0,05660</td>
+  <td>89,25 %</td>
+  <td>0,228</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>0,015513</td>
+  <td>0,05804</td>
+  <td>91,80 %</td>
+  <td>0,299</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>0,015626</td>
+  <td>0,05896</td>
+  <td>93,41 %</td>
+  <td>0,301</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>0,015753</td>
+  <td>0,06167</td>
+  <td>87,90 %</td>
+  <td>0,236</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,015855</td>
+  <td>0,06167</td>
+  <td>93,91 %</td>
+  <td>0,290</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>0,016072</td>
+  <td>0,06070</td>
+  <td>92,70 %</td>
+  <td>0,299</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016075</td>
+  <td>0,06221</td>
+  <td>91,53 %</td>
+  <td>0,292</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>0,016197</td>
+  <td>0,05878</td>
+  <td>86,02 %</td>
+  <td>0,273</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016292</td>
+  <td>0,05878</td>
+  <td>90,77 %</td>
+  <td>0,323</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>0,016356</td>
+  <td>0,06221</td>
+  <td>82,08 %</td>
+  <td>0,221</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016389</td>
+  <td>0,06371</td>
+  <td>91,67 %</td>
+  <td>0,274</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>0,016542</td>
+  <td>0,06371</td>
+  <td>89,78 %</td>
+  <td>0,265</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016543</td>
+  <td>0,06381</td>
+  <td>91,17 %</td>
+  <td>0,291</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>0,016552</td>
+  <td>0,06381</td>
+  <td>88,93 %</td>
+  <td>0,274</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>0,016674</td>
+  <td>0,06121</td>
+  <td>96,19 %</td>
+  <td>0,361</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>0,016840</td>
+  <td>0,06428</td>
+  <td>86,29 %</td>
+  <td>0,270</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016846</td>
+  <td>0,06649</td>
+  <td>90,73 %</td>
+  <td>0,293</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016949</td>
+  <td>0,06428</td>
+  <td>93,82 %</td>
+  <td>0,339</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>0,017585</td>
+  <td>0,06679</td>
+  <td>94,35 %</td>
+  <td>0,342</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>0,017589</td>
+  <td>0,06649</td>
+  <td>77,69 %</td>
+  <td>0,208</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>0,017593</td>
+  <td>0,06948</td>
+  <td>89,34 %</td>
+  <td>0,280</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017698</td>
+  <td>0,06948</td>
+  <td>90,77 %</td>
+  <td>0,304</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>0,017720</td>
+  <td>0,06570</td>
+  <td>92,38 %</td>
+  <td>0,326</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018000</td>
+  <td>0,06783</td>
+  <td>94,40 %</td>
+  <td>0,361</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>0,018154</td>
+  <td>0,06783</td>
+  <td>86,83 %</td>
+  <td>0,314</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018192</td>
+  <td>0,07097</td>
+  <td>92,25 %</td>
+  <td>0,333</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018543</td>
+  <td>0,07563</td>
+  <td>93,82 %</td>
+  <td>0,322</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>0,018904</td>
+  <td>0,07563</td>
+  <td>95,83 %</td>
+  <td>0,354</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>0,018989</td>
+  <td>0,07097</td>
+  <td>98,70 %</td>
+  <td>0,421</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019065</td>
+  <td>0,07563</td>
+  <td>94,89 %</td>
+  <td>0,353</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>0,019162</td>
+  <td>0,07303</td>
+  <td>94,35 %</td>
+  <td>0,365</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>0,019338</td>
+  <td>0,07563</td>
+  <td>94,35 %</td>
+  <td>0,364</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>0,019395</td>
+  <td>0,07412</td>
+  <td>94,49 %</td>
+  <td>0,375</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>0,019419</td>
+  <td>0,07417</td>
+  <td>94,49 %</td>
+  <td>0,376</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>0,019562</td>
+  <td>0,07842</td>
+  <td>86,92 %</td>
+  <td>0,288</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019653</td>
+  <td>0,07842</td>
+  <td>89,74 %</td>
+  <td>0,328</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>0,019676</td>
+  <td>0,07463</td>
+  <td>91,35 %</td>
+  <td>0,342</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>0,028475</td>
+  <td>0,11662</td>
+  <td>84,27 %</td>
+  <td>0,396</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>0,049450</td>
+  <td>0,19236</td>
+  <td>92,20 %</td>
+  <td>0,790</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de las predicciones de testeo.</em></p>
+<h2 id="sec-s4-4">S4.4 Desempeño de abril de 2024</h2>
+<p>El cuadro reúne los cuarenta y un modelos sobre las 696 horas y 980 hogares del mes. La pérdida pinball, el nMAE y la amplitud están normalizados; la cobertura se expresa como porcentaje de observaciones dentro del intervalo P5–P95.</p>
+<p class="caption" id="cuadro-s4-4"><strong>Cuadro S4.4. Desempeño del testeo de abril de 2024.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Pérdida pinball normalizada</th>
+  <th>nMAE P50</th>
+  <th>Cobertura observada</th>
+  <th>Amplitud normalizada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>0,015224</td>
+  <td>0,05819</td>
+  <td>90,42 %</td>
+  <td>0,244</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,015232</td>
+  <td>0,05917</td>
+  <td>91,43 %</td>
+  <td>0,256</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>0,015477</td>
+  <td>0,05917</td>
+  <td>85,92 %</td>
+  <td>0,224</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,015620</td>
+  <td>0,06246</td>
+  <td>94,11 %</td>
+  <td>0,267</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>0,015899</td>
+  <td>0,06093</td>
+  <td>90,71 %</td>
+  <td>0,272</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>0,016110</td>
+  <td>0,06246</td>
+  <td>81,56 %</td>
+  <td>0,205</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016600</td>
+  <td>0,06465</td>
+  <td>89,80 %</td>
+  <td>0,274</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>0,016708</td>
+  <td>0,06465</td>
+  <td>88,65 %</td>
+  <td>0,269</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>0,016718</td>
+  <td>0,06400</td>
+  <td>91,33 %</td>
+  <td>0,305</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,016884</td>
+  <td>0,06755</td>
+  <td>92,19 %</td>
+  <td>0,290</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>0,016906</td>
+  <td>0,06547</td>
+  <td>90,04 %</td>
+  <td>0,277</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>0,016960</td>
+  <td>0,06724</td>
+  <td>89,46 %</td>
+  <td>0,274</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017056</td>
+  <td>0,06724</td>
+  <td>91,24 %</td>
+  <td>0,289</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017239</td>
+  <td>0,06819</td>
+  <td>91,62 %</td>
+  <td>0,297</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017274</td>
+  <td>0,06975</td>
+  <td>92,39 %</td>
+  <td>0,288</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>0,017284</td>
+  <td>0,06585</td>
+  <td>92,96 %</td>
+  <td>0,321</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>0,017288</td>
+  <td>0,06590</td>
+  <td>93,10 %</td>
+  <td>0,322</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>0,017289</td>
+  <td>0,06975</td>
+  <td>90,23 %</td>
+  <td>0,277</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>0,017359</td>
+  <td>0,06973</td>
+  <td>89,56 %</td>
+  <td>0,264</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017377</td>
+  <td>0,07014</td>
+  <td>92,48 %</td>
+  <td>0,295</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>0,017418</td>
+  <td>0,06614</td>
+  <td>91,38 %</td>
+  <td>0,316</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017523</td>
+  <td>0,06973</td>
+  <td>89,99 %</td>
+  <td>0,281</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>0,017564</td>
+  <td>0,06819</td>
+  <td>84,24 %</td>
+  <td>0,256</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017573</td>
+  <td>0,06844</td>
+  <td>88,41 %</td>
+  <td>0,276</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>0,017610</td>
+  <td>0,07014</td>
+  <td>87,16 %</td>
+  <td>0,264</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>0,017646</td>
+  <td>0,06746</td>
+  <td>94,64 %</td>
+  <td>0,336</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>0,017945</td>
+  <td>0,06755</td>
+  <td>98,18 %</td>
+  <td>0,395</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>0,018111</td>
+  <td>0,06844</td>
+  <td>77,63 %</td>
+  <td>0,209</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018412</td>
+  <td>0,07221</td>
+  <td>88,31 %</td>
+  <td>0,276</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>0,018428</td>
+  <td>0,07042</td>
+  <td>90,04 %</td>
+  <td>0,299</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018559</td>
+  <td>0,07232</td>
+  <td>91,00 %</td>
+  <td>0,334</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>0,018575</td>
+  <td>0,07232</td>
+  <td>89,18 %</td>
+  <td>0,311</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>0,018885</td>
+  <td>0,07221</td>
+  <td>79,12 %</td>
+  <td>0,227</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019234</td>
+  <td>0,07610</td>
+  <td>89,80 %</td>
+  <td>0,294</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>0,019360</td>
+  <td>0,07584</td>
+  <td>89,94 %</td>
+  <td>0,317</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>0,019400</td>
+  <td>0,07610</td>
+  <td>85,49 %</td>
+  <td>0,279</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>0,019442</td>
+  <td>0,07115</td>
+  <td>88,79 %</td>
+  <td>0,296</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019560</td>
+  <td>0,07610</td>
+  <td>83,48 %</td>
+  <td>0,268</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>0,020027</td>
+  <td>0,07610</td>
+  <td>89,94 %</td>
+  <td>0,332</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>0,021069</td>
+  <td>0,08244</td>
+  <td>87,64 %</td>
+  <td>0,341</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>0,044148</td>
+  <td>0,17707</td>
+  <td>88,65 %</td>
+  <td>0,728</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de las predicciones de testeo.</em></p>
+<h2 id="sec-s4-5">S4.5 Pérdida por semilla en el testeo completo</h2>
+<p>Cada columna de semilla promedia los cuatro valores mensuales de pérdida pinball normalizada. La desviación estándar muestral se calcula entre las tres ejecuciones.</p>
+<p class="caption" id="cuadro-s4-5"><strong>Cuadro S4.5. Pérdida pinball normalizada por semilla en el testeo de enero–abril.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th style="text-align:right">Semilla 42</th>
+  <th style="text-align:right">Semilla 1</th>
+  <th style="text-align:right">Semilla 2</th>
+  <th style="text-align:right">Desviación estándar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,016159</td>
+  <td style="text-align:right">0,016080</td>
+  <td style="text-align:right">0,015932</td>
+  <td style="text-align:right">0,000115</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td style="text-align:right">0,016298</td>
+  <td style="text-align:right">0,016162</td>
+  <td style="text-align:right">0,016036</td>
+  <td style="text-align:right">0,000131</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,016323</td>
+  <td style="text-align:right">0,016317</td>
+  <td style="text-align:right">0,016268</td>
+  <td style="text-align:right">0,000030</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,017569</td>
+  <td style="text-align:right">0,017087</td>
+  <td style="text-align:right">0,017631</td>
+  <td style="text-align:right">0,000298</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,017794</td>
+  <td style="text-align:right">0,017813</td>
+  <td style="text-align:right">0,017749</td>
+  <td style="text-align:right">0,000033</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,017479</td>
+  <td style="text-align:right">0,017886</td>
+  <td style="text-align:right">0,017993</td>
+  <td style="text-align:right">0,000271</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,017931</td>
+  <td style="text-align:right">0,017796</td>
+  <td style="text-align:right">0,017702</td>
+  <td style="text-align:right">0,000115</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,017894</td>
+  <td style="text-align:right">0,017900</td>
+  <td style="text-align:right">0,017939</td>
+  <td style="text-align:right">0,000024</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,017831</td>
+  <td style="text-align:right">0,018120</td>
+  <td style="text-align:right">0,017805</td>
+  <td style="text-align:right">0,000175</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,017898</td>
+  <td style="text-align:right">0,018472</td>
+  <td style="text-align:right">0,017686</td>
+  <td style="text-align:right">0,000407</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td style="text-align:right">0,018182</td>
+  <td style="text-align:right">0,018628</td>
+  <td style="text-align:right">0,017805</td>
+  <td style="text-align:right">0,000412</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td style="text-align:right">0,018386</td>
+  <td style="text-align:right">0,018381</td>
+  <td style="text-align:right">0,018375</td>
+  <td style="text-align:right">0,000006</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td style="text-align:right">0,018661</td>
+  <td style="text-align:right">0,018597</td>
+  <td style="text-align:right">0,018492</td>
+  <td style="text-align:right">0,000085</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,018267</td>
+  <td style="text-align:right">0,019255</td>
+  <td style="text-align:right">0,018638</td>
+  <td style="text-align:right">0,000499</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,019054</td>
+  <td style="text-align:right">0,018670</td>
+  <td style="text-align:right">0,018730</td>
+  <td style="text-align:right">0,000206</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,018675</td>
+  <td style="text-align:right">0,018975</td>
+  <td style="text-align:right">0,019294</td>
+  <td style="text-align:right">0,000309</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td style="text-align:right">0,018554</td>
+  <td style="text-align:right">0,019590</td>
+  <td style="text-align:right">0,018986</td>
+  <td style="text-align:right">0,000521</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td style="text-align:right">0,018678</td>
+  <td style="text-align:right">0,019423</td>
+  <td style="text-align:right">0,019111</td>
+  <td style="text-align:right">0,000374</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td style="text-align:right">0,019593</td>
+  <td style="text-align:right">0,018897</td>
+  <td style="text-align:right">0,018760</td>
+  <td style="text-align:right">0,000447</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,019620</td>
+  <td style="text-align:right">0,019022</td>
+  <td style="text-align:right">0,018708</td>
+  <td style="text-align:right">0,000464</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,019264</td>
+  <td style="text-align:right">0,019531</td>
+  <td style="text-align:right">0,019272</td>
+  <td style="text-align:right">0,000152</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,019234</td>
+  <td style="text-align:right">0,019546</td>
+  <td style="text-align:right">0,019425</td>
+  <td style="text-align:right">0,000157</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,020032</td>
+  <td style="text-align:right">0,018973</td>
+  <td style="text-align:right">0,019383</td>
+  <td style="text-align:right">0,000534</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td style="text-align:right">0,019402</td>
+  <td style="text-align:right">0,019837</td>
+  <td style="text-align:right">0,019699</td>
+  <td style="text-align:right">0,000222</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td style="text-align:right">0,020127</td>
+  <td style="text-align:right">0,020301</td>
+  <td style="text-align:right">0,020174</td>
+  <td style="text-align:right">0,000090</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td style="text-align:right">0,020640</td>
+  <td style="text-align:right">0,020605</td>
+  <td style="text-align:right">0,020716</td>
+  <td style="text-align:right">0,000057</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td style="text-align:right">0,021188</td>
+  <td style="text-align:right">0,021166</td>
+  <td style="text-align:right">0,021304</td>
+  <td style="text-align:right">0,000074</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td style="text-align:right">0,023375</td>
+  <td style="text-align:right">0,022447</td>
+  <td style="text-align:right">0,022460</td>
+  <td style="text-align:right">0,000532</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de los resultados y registros del experimento.</em></p>
+<h2 id="sec-s4-6">S4.6 Frecuencias observadas de los tres cuantiles</h2>
+<p>Cada porcentaje expresa la proporción de observaciones que queda por debajo o coincide con el cuantil pronosticado. Se reúnen todas las horas de enero–abril y luego se promedian las ejecuciones. Los niveles de referencia son 5 %, 50 % y 95 %.</p>
+<p class="caption" id="cuadro-s4-6"><strong>Cuadro S4.6. Frecuencias cuantílicas en el testeo de enero–abril.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Frecuencia P5</th>
+  <th>Frecuencia P50</th>
+  <th>Frecuencia P95</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>3,00 %</td>
+  <td>47,54 %</td>
+  <td>94,83 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>4,05 %</td>
+  <td>47,54 %</td>
+  <td>91,42 %</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>5,40 %</td>
+  <td>51,33 %</td>
+  <td>95,72 %</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>4,60 %</td>
+  <td>52,68 %</td>
+  <td>95,69 %</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>4,62 %</td>
+  <td>50,44 %</td>
+  <td>95,79 %</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>5,01 %</td>
+  <td>54,87 %</td>
+  <td>96,16 %</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>4,93 %</td>
+  <td>51,16 %</td>
+  <td>94,51 %</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>5,19 %</td>
+  <td>51,41 %</td>
+  <td>95,69 %</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>4,33 %</td>
+  <td>49,91 %</td>
+  <td>95,58 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>3,75 %</td>
+  <td>50,39 %</td>
+  <td>93,87 %</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>5,72 %</td>
+  <td>53,64 %</td>
+  <td>95,44 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>4,34 %</td>
+  <td>50,39 %</td>
+  <td>93,70 %</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>8,70 %</td>
+  <td>53,64 %</td>
+  <td>95,89 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>4,41 %</td>
+  <td>55,50 %</td>
+  <td>95,45 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>9,14 %</td>
+  <td>55,50 %</td>
+  <td>93,91 %</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>9,57 %</td>
+  <td>51,41 %</td>
+  <td>93,57 %</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>11,76 %</td>
+  <td>51,16 %</td>
+  <td>90,76 %</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>4,81 %</td>
+  <td>52,52 %</td>
+  <td>94,83 %</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>5,07 %</td>
+  <td>53,73 %</td>
+  <td>96,66 %</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>4,13 %</td>
+  <td>53,29 %</td>
+  <td>98,00 %</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>9,09 %</td>
+  <td>52,52 %</td>
+  <td>91,25 %</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>16,48 %</td>
+  <td>54,87 %</td>
+  <td>91,89 %</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>7,31 %</td>
+  <td>56,12 %</td>
+  <td>94,44 %</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>4,94 %</td>
+  <td>56,12 %</td>
+  <td>94,77 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>5,36 %</td>
+  <td>47,90 %</td>
+  <td>96,00 %</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>4,70 %</td>
+  <td>54,38 %</td>
+  <td>95,46 %</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>4,74 %</td>
+  <td>49,67 %</td>
+  <td>96,09 %</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>9,33 %</td>
+  <td>54,38 %</td>
+  <td>95,23 %</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>4,45 %</td>
+  <td>48,25 %</td>
+  <td>95,76 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>5,64 %</td>
+  <td>59,73 %</td>
+  <td>96,81 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>7,14 %</td>
+  <td>59,73 %</td>
+  <td>96,11 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>1,95 %</td>
+  <td>47,90 %</td>
+  <td>99,05 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>6,51 %</td>
+  <td>59,73 %</td>
+  <td>94,71 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>4,27 %</td>
+  <td>48,35 %</td>
+  <td>96,11 %</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>4,27 %</td>
+  <td>48,28 %</td>
+  <td>96,18 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>4,31 %</td>
+  <td>59,73 %</td>
+  <td>96,99 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>5,50 %</td>
+  <td>56,42 %</td>
+  <td>95,34 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>9,73 %</td>
+  <td>56,42 %</td>
+  <td>94,35 %</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>7,27 %</td>
+  <td>55,98 %</td>
+  <td>95,92 %</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>4,90 %</td>
+  <td>41,21 %</td>
+  <td>91,18 %</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>4,20 %</td>
+  <td>53,08 %</td>
+  <td>95,52 %</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de las predicciones de testeo.</em></p>
+<h2 id="sec-s4-7">S4.7 Cobertura por contexto en el conjunto de testeo</h2>
+<p>Se conservan las clasificaciones de la validación, descritas en la Sección 5.5.4 y en S3.7. Las horas con GHI bajo cielo despejado inferior a 20 W/m² integran el grupo de recurso potencial bajo. Las restantes se separan por el cociente GHI/GHI bajo cielo despejado: los valores inferiores al corte de validación, aproximadamente 0,858, corresponden a mayor atenuación. Se utiliza el corte con su precisión completa. Por separado, las mismas observaciones se agrupan en días hábiles, sábados y domingos. Los <a href="s4.html#cuadro-s4-7" class="crossref">Cuadros S4.7</a> y <a href="s4.html#cuadro-s4-8" class="crossref">S4.8</a> permiten comparar esas agrupaciones con los resultados globales.</p>
+<h4 id="condiciones-solares-en-testeo">Condiciones solares en testeo</h4>
+<p class="caption" id="cuadro-s4-7"><strong>Cuadro S4.7. Cobertura por condición solar en el testeo de enero–abril.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Cielo menos atenuado</th>
+  <th>Cielo más atenuado</th>
+  <th>Recurso solar bajo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>95,84 %</td>
+  <td>88,70 %</td>
+  <td>90,70 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>90,49 %</td>
+  <td>79,04 %</td>
+  <td>88,58 %</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>91,85 %</td>
+  <td>84,91 %</td>
+  <td>91,37 %</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>94,84 %</td>
+  <td>85,04 %</td>
+  <td>91,14 %</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>94,92 %</td>
+  <td>85,98 %</td>
+  <td>90,90 %</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>94,04 %</td>
+  <td>89,71 %</td>
+  <td>90,05 %</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>91,37 %</td>
+  <td>86,17 %</td>
+  <td>89,80 %</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>89,49 %</td>
+  <td>90,28 %</td>
+  <td>91,14 %</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>94,16 %</td>
+  <td>84,60 %</td>
+  <td>91,97 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>94,84 %</td>
+  <td>89,58 %</td>
+  <td>87,68 %</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>94,16 %</td>
+  <td>88,95 %</td>
+  <td>87,51 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>90,89 %</td>
+  <td>84,09 %</td>
+  <td>90,36 %</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>92,93 %</td>
+  <td>84,85 %</td>
+  <td>84,83 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>92,81 %</td>
+  <td>91,10 %</td>
+  <td>90,03 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>88,01 %</td>
+  <td>85,61 %</td>
+  <td>82,66 %</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>83,25 %</td>
+  <td>86,17 %</td>
+  <td>83,65 %</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>80,54 %</td>
+  <td>76,58 %</td>
+  <td>78,98 %</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>90,77 %</td>
+  <td>84,85 %</td>
+  <td>91,43 %</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>94,20 %</td>
+  <td>87,82 %</td>
+  <td>91,48 %</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>95,60 %</td>
+  <td>87,44 %</td>
+  <td>95,18 %</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>86,01 %</td>
+  <td>79,17 %</td>
+  <td>81,06 %</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>83,65 %</td>
+  <td>76,89 %</td>
+  <td>70,28 %</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>90,49 %</td>
+  <td>87,12 %</td>
+  <td>85,27 %</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>92,13 %</td>
+  <td>88,89 %</td>
+  <td>88,89 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>93,88 %</td>
+  <td>87,06 %</td>
+  <td>90,09 %</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>91,57 %</td>
+  <td>88,64 %</td>
+  <td>91,05 %</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>90,97 %</td>
+  <td>73,04 %</td>
+  <td>98,04 %</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>88,25 %</td>
+  <td>86,62 %</td>
+  <td>84,34 %</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>92,57 %</td>
+  <td>85,23 %</td>
+  <td>92,77 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>94,12 %</td>
+  <td>86,93 %</td>
+  <td>91,03 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>90,77 %</td>
+  <td>84,85 %</td>
+  <td>89,42 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>97,56 %</td>
+  <td>93,37 %</td>
+  <td>98,17 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>90,05 %</td>
+  <td>83,90 %</td>
+  <td>88,69 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>92,45 %</td>
+  <td>87,69 %</td>
+  <td>92,97 %</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>92,45 %</td>
+  <td>87,69 %</td>
+  <td>93,11 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>91,49 %</td>
+  <td>80,68 %</td>
+  <td>97,59 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>90,89 %</td>
+  <td>89,46 %</td>
+  <td>89,40 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>83,29 %</td>
+  <td>84,60 %</td>
+  <td>85,36 %</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>88,73 %</td>
+  <td>80,37 %</td>
+  <td>91,52 %</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>81,89 %</td>
+  <td>80,11 %</td>
+  <td>90,90 %</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>90,05 %</td>
+  <td>87,50 %</td>
+  <td>93,37 %</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia. Porcentajes de cobertura calculados sobre las horas de cada contexto y promediados entre ejecuciones.</em></p>
+<h4 id="dia-de-la-semana-en-testeo">Día de la semana en testeo</h4>
+<p class="caption" id="cuadro-s4-8"><strong>Cuadro S4.8. Cobertura por tipo de día en el testeo de enero–abril.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Domingo</th>
+  <th>Día hábil</th>
+  <th>Sábado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>92,01 %</td>
+  <td>91,68 %</td>
+  <td>92,40 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>84,98 %</td>
+  <td>87,52 %</td>
+  <td>88,89 %</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>91,67 %</td>
+  <td>90,78 %</td>
+  <td>86,68 %</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>92,45 %</td>
+  <td>91,51 %</td>
+  <td>87,75 %</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>92,97 %</td>
+  <td>90,71 %</td>
+  <td>91,75 %</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>92,88 %</td>
+  <td>91,81 %</td>
+  <td>86,19 %</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>92,45 %</td>
+  <td>89,16 %</td>
+  <td>89,05 %</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>93,23 %</td>
+  <td>90,58 %</td>
+  <td>87,50 %</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>93,66 %</td>
+  <td>90,86 %</td>
+  <td>90,93 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>87,76 %</td>
+  <td>90,60 %</td>
+  <td>89,95 %</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>92,71 %</td>
+  <td>89,58 %</td>
+  <td>87,58 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>84,11 %</td>
+  <td>90,55 %</td>
+  <td>88,24 %</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>91,15 %</td>
+  <td>87,44 %</td>
+  <td>82,27 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>93,75 %</td>
+  <td>90,75 %</td>
+  <td>89,95 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>88,02 %</td>
+  <td>84,69 %</td>
+  <td>82,11 %</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>84,98 %</td>
+  <td>84,77 %</td>
+  <td>79,17 %</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>83,16 %</td>
+  <td>78,44 %</td>
+  <td>77,86 %</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>90,62 %</td>
+  <td>89,94 %</td>
+  <td>89,87 %</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>92,62 %</td>
+  <td>92,18 %</td>
+  <td>87,66 %</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>96,27 %</td>
+  <td>93,60 %</td>
+  <td>92,97 %</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>83,51 %</td>
+  <td>81,82 %</td>
+  <td>82,60 %</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>75,87 %</td>
+  <td>76,45 %</td>
+  <td>69,69 %</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>88,63 %</td>
+  <td>86,63 %</td>
+  <td>88,32 %</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>91,15 %</td>
+  <td>89,24 %</td>
+  <td>91,58 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>91,67 %</td>
+  <td>91,02 %</td>
+  <td>87,75 %</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>93,32 %</td>
+  <td>90,96 %</td>
+  <td>87,34 %</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>92,88 %</td>
+  <td>91,91 %</td>
+  <td>87,09 %</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>88,80 %</td>
+  <td>86,29 %</td>
+  <td>81,21 %</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>93,23 %</td>
+  <td>91,18 %</td>
+  <td>90,20 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>92,45 %</td>
+  <td>91,52 %</td>
+  <td>88,24 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>87,76 %</td>
+  <td>89,58 %</td>
+  <td>87,01 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>99,13 %</td>
+  <td>96,88 %</td>
+  <td>96,32 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>89,84 %</td>
+  <td>88,23 %</td>
+  <td>86,52 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>94,79 %</td>
+  <td>91,72 %</td>
+  <td>89,71 %</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>94,79 %</td>
+  <td>91,76 %</td>
+  <td>89,95 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>92,45 %</td>
+  <td>93,27 %</td>
+  <td>89,95 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>91,32 %</td>
+  <td>89,73 %</td>
+  <td>89,05 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>88,45 %</td>
+  <td>84,93 %</td>
+  <td>79,41 %</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>91,49 %</td>
+  <td>89,31 %</td>
+  <td>82,60 %</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>90,36 %</td>
+  <td>85,71 %</td>
+  <td>85,29 %</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>94,27 %</td>
+  <td>91,52 %</td>
+  <td>87,50 %</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia. Porcentajes de cobertura calculados sobre las horas de cada contexto y promediados entre ejecuciones.</em></p>
+<h2 id="sec-s4-8">S4.8 Cobertura y amplitud por hora durante el testeo</h2>
+<p>La cobertura reúne las observaciones de enero–abril de cada hora. La amplitud se normaliza por la media del valor absoluto de la demanda de cada mes y se promedia con igual peso mensual. Los paneles se ordenan según el Cuadro 5.6 y muestran todos los modelos.</p>
+<p class="caption" id="figura-s4-1"><strong>Figura S4.1. Diagnósticos horarios del testeo, modelos 1 a 6.</strong></p>
+<p class="image"><img src="assets/a67ef6179ccf.png" alt="Figura S4.1. Diagnósticos horarios del testeo, modelos 1 a 6." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> La línea discontinua indica la cobertura nominal del 90 %.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s4-2"><strong>Figura S4.2. Diagnósticos horarios del testeo, modelos 7 a 12.</strong></p>
+<p class="image"><img src="assets/8312e88c0764.png" alt="Figura S4.2. Diagnósticos horarios del testeo, modelos 7 a 12." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> La línea discontinua indica la cobertura nominal del 90 %.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s4-3"><strong>Figura S4.3. Diagnósticos horarios del testeo, modelos 13 a 18.</strong></p>
+<p class="image"><img src="assets/71f9e727bfdd.png" alt="Figura S4.3. Diagnósticos horarios del testeo, modelos 13 a 18." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> La línea discontinua indica la cobertura nominal del 90 %.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s4-4"><strong>Figura S4.4. Diagnósticos horarios del testeo, modelos 19 a 24.</strong></p>
+<p class="image"><img src="assets/f04970da8e35.png" alt="Figura S4.4. Diagnósticos horarios del testeo, modelos 19 a 24." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> La línea discontinua indica la cobertura nominal del 90 %.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s4-5"><strong>Figura S4.5. Diagnósticos horarios del testeo, modelos 25 a 30.</strong></p>
+<p class="image"><img src="assets/db18ee24da54.png" alt="Figura S4.5. Diagnósticos horarios del testeo, modelos 25 a 30." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> La línea discontinua indica la cobertura nominal del 90 %.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s4-6"><strong>Figura S4.6. Diagnósticos horarios del testeo, modelos 31 a 36.</strong></p>
+<p class="image"><img src="assets/28939ac16e3f.png" alt="Figura S4.6. Diagnósticos horarios del testeo, modelos 31 a 36." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> La línea discontinua indica la cobertura nominal del 90 %.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s4-7"><strong>Figura S4.7. Diagnósticos horarios del testeo, modelos 37 a 41.</strong></p>
+<p class="image"><img src="assets/f1f216785ba5.png" alt="Figura S4.7. Diagnósticos horarios del testeo, modelos 37 a 41." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> La línea discontinua indica la cobertura nominal del 90 %.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<h2 id="sec-s4-9">S4.9 Diagnósticos adicionales de enero de 2024</h2>
+<p>Las <a href="s4.html#sec-s4-10" class="crossref">Secciones S4.10</a>–<a href="s4.html#sec-s4-13" class="crossref">S4.13</a> amplían el detalle de enero, que comprende 744 horas y 1.004 hogares. Presentan frecuencias cuantílicas, resultados por ejecución, cobertura por contexto y trayectorias de la segunda quincena. Los cuadros y figuras identifican explícitamente este período para distinguirlo del testeo completo.</p>
+<h2 id="sec-s4-10">S4.10 Frecuencias de los cuantiles y puntuación de intervalo en enero</h2>
+<p>Bajo P5 y sobre P95 se cuentan desigualdades estrictas; hasta P50 incluye igualdad. Sus referencias son 5 %, 5 % y 50 %, respectivamente. El nMAE y la pérdida de intervalo se normalizan por la media del valor absoluto de la demanda de enero.</p>
+<p class="caption" id="cuadro-s4-9"><strong>Cuadro S4.9. Frecuencias cuantílicas, nMAE y puntuación de intervalo en enero de 2024.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th style="text-align:right">Vía</th>
+  <th style="text-align:right">Bajo P5</th>
+  <th style="text-align:right">Hasta P50</th>
+  <th style="text-align:right">Sobre P95</th>
+  <th style="text-align:right">nMAE P50</th>
+  <th style="text-align:right">Winkler normalizado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">8,02 %</td>
+  <td style="text-align:right">50,27 %</td>
+  <td style="text-align:right">4,70 %</td>
+  <td style="text-align:right">0,05729</td>
+  <td style="text-align:right">0,362</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">6,68 %</td>
+  <td style="text-align:right">50,27 %</td>
+  <td style="text-align:right">2,28 %</td>
+  <td style="text-align:right">0,05729</td>
+  <td style="text-align:right">0,368</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">6,72 %</td>
+  <td style="text-align:right">58,65 %</td>
+  <td style="text-align:right">2,37 %</td>
+  <td style="text-align:right">0,05769</td>
+  <td style="text-align:right">0,376</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">5,24 %</td>
+  <td style="text-align:right">56,45 %</td>
+  <td style="text-align:right">3,36 %</td>
+  <td style="text-align:right">0,06143</td>
+  <td style="text-align:right">0,376</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">11,87 %</td>
+  <td style="text-align:right">56,45 %</td>
+  <td style="text-align:right">5,29 %</td>
+  <td style="text-align:right">0,06143</td>
+  <td style="text-align:right">0,395</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">7,17 %</td>
+  <td style="text-align:right">50,13 %</td>
+  <td style="text-align:right">1,43 %</td>
+  <td style="text-align:right">0,06377</td>
+  <td style="text-align:right">0,374</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">4,93 %</td>
+  <td style="text-align:right">53,85 %</td>
+  <td style="text-align:right">2,64 %</td>
+  <td style="text-align:right">0,06070</td>
+  <td style="text-align:right">0,404</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">13,17 %</td>
+  <td style="text-align:right">50,13 %</td>
+  <td style="text-align:right">8,74 %</td>
+  <td style="text-align:right">0,06377</td>
+  <td style="text-align:right">0,377</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">9,14 %</td>
+  <td style="text-align:right">63,84 %</td>
+  <td style="text-align:right">3,23 %</td>
+  <td style="text-align:right">0,06543</td>
+  <td style="text-align:right">0,381</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">7,17 %</td>
+  <td style="text-align:right">51,97 %</td>
+  <td style="text-align:right">2,91 %</td>
+  <td style="text-align:right">0,06630</td>
+  <td style="text-align:right">0,374</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">9,36 %</td>
+  <td style="text-align:right">51,97 %</td>
+  <td style="text-align:right">3,05 %</td>
+  <td style="text-align:right">0,06630</td>
+  <td style="text-align:right">0,378</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">6,32 %</td>
+  <td style="text-align:right">56,94 %</td>
+  <td style="text-align:right">4,44 %</td>
+  <td style="text-align:right">0,06558</td>
+  <td style="text-align:right">0,390</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">8,60 %</td>
+  <td style="text-align:right">61,56 %</td>
+  <td style="text-align:right">3,36 %</td>
+  <td style="text-align:right">0,06584</td>
+  <td style="text-align:right">0,389</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">5,96 %</td>
+  <td style="text-align:right">61,25 %</td>
+  <td style="text-align:right">2,02 %</td>
+  <td style="text-align:right">0,06393</td>
+  <td style="text-align:right">0,409</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">7,66 %</td>
+  <td style="text-align:right">56,94 %</td>
+  <td style="text-align:right">6,68 %</td>
+  <td style="text-align:right">0,06558</td>
+  <td style="text-align:right">0,398</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">4,39 %</td>
+  <td style="text-align:right">61,56 %</td>
+  <td style="text-align:right">1,70 %</td>
+  <td style="text-align:right">0,06584</td>
+  <td style="text-align:right">0,396</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">5,47 %</td>
+  <td style="text-align:right">53,27 %</td>
+  <td style="text-align:right">3,72 %</td>
+  <td style="text-align:right">0,06665</td>
+  <td style="text-align:right">0,389</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">6,45 %</td>
+  <td style="text-align:right">63,84 %</td>
+  <td style="text-align:right">2,42 %</td>
+  <td style="text-align:right">0,06543</td>
+  <td style="text-align:right">0,407</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">6,45 %</td>
+  <td style="text-align:right">56,45 %</td>
+  <td style="text-align:right">2,02 %</td>
+  <td style="text-align:right">0,06447</td>
+  <td style="text-align:right">0,421</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">6,23 %</td>
+  <td style="text-align:right">66,40 %</td>
+  <td style="text-align:right">0,99 %</td>
+  <td style="text-align:right">0,06507</td>
+  <td style="text-align:right">0,416</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">3,23 %</td>
+  <td style="text-align:right">53,63 %</td>
+  <td style="text-align:right">2,96 %</td>
+  <td style="text-align:right">0,06616</td>
+  <td style="text-align:right">0,411</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">7,93 %</td>
+  <td style="text-align:right">53,63 %</td>
+  <td style="text-align:right">1,34 %</td>
+  <td style="text-align:right">0,06616</td>
+  <td style="text-align:right">0,417</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">5,60 %</td>
+  <td style="text-align:right">53,00 %</td>
+  <td style="text-align:right">5,42 %</td>
+  <td style="text-align:right">0,06910</td>
+  <td style="text-align:right">0,388</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">6,41 %</td>
+  <td style="text-align:right">53,00 %</td>
+  <td style="text-align:right">4,03 %</td>
+  <td style="text-align:right">0,06910</td>
+  <td style="text-align:right">0,388</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">2,91 %</td>
+  <td style="text-align:right">65,14 %</td>
+  <td style="text-align:right">1,12 %</td>
+  <td style="text-align:right">0,06503</td>
+  <td style="text-align:right">0,430</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">6,72 %</td>
+  <td style="text-align:right">53,63 %</td>
+  <td style="text-align:right">2,02 %</td>
+  <td style="text-align:right">0,06616</td>
+  <td style="text-align:right">0,434</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">7,30 %</td>
+  <td style="text-align:right">53,67 %</td>
+  <td style="text-align:right">3,58 %</td>
+  <td style="text-align:right">0,06830</td>
+  <td style="text-align:right">0,424</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">2,82 %</td>
+  <td style="text-align:right">53,63 %</td>
+  <td style="text-align:right">2,42 %</td>
+  <td style="text-align:right">0,06616</td>
+  <td style="text-align:right">0,445</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">3,00 %</td>
+  <td style="text-align:right">53,14 %</td>
+  <td style="text-align:right">2,91 %</td>
+  <td style="text-align:right">0,06684</td>
+  <td style="text-align:right">0,439</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">1,48 %</td>
+  <td style="text-align:right">53,27 %</td>
+  <td style="text-align:right">0,99 %</td>
+  <td style="text-align:right">0,06665</td>
+  <td style="text-align:right">0,441</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">6,94 %</td>
+  <td style="text-align:right">53,67 %</td>
+  <td style="text-align:right">2,91 %</td>
+  <td style="text-align:right">0,06830</td>
+  <td style="text-align:right">0,429</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">10,22 %</td>
+  <td style="text-align:right">66,67 %</td>
+  <td style="text-align:right">2,87 %</td>
+  <td style="text-align:right">0,07164</td>
+  <td style="text-align:right">0,407</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">7,03 %</td>
+  <td style="text-align:right">66,67 %</td>
+  <td style="text-align:right">2,69 %</td>
+  <td style="text-align:right">0,07164</td>
+  <td style="text-align:right">0,413</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">6,05 %</td>
+  <td style="text-align:right">53,76 %</td>
+  <td style="text-align:right">6,32 %</td>
+  <td style="text-align:right">0,07042</td>
+  <td style="text-align:right">0,428</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">7,21 %</td>
+  <td style="text-align:right">57,53 %</td>
+  <td style="text-align:right">3,32 %</td>
+  <td style="text-align:right">0,07027</td>
+  <td style="text-align:right">0,440</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">6,59 %</td>
+  <td style="text-align:right">53,76 %</td>
+  <td style="text-align:right">5,65 %</td>
+  <td style="text-align:right">0,07042</td>
+  <td style="text-align:right">0,440</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">7,12 %</td>
+  <td style="text-align:right">56,85 %</td>
+  <td style="text-align:right">2,42 %</td>
+  <td style="text-align:right">0,06976</td>
+  <td style="text-align:right">0,454</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">7,12 %</td>
+  <td style="text-align:right">56,72 %</td>
+  <td style="text-align:right">2,42 %</td>
+  <td style="text-align:right">0,06976</td>
+  <td style="text-align:right">0,454</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">2,55 %</td>
+  <td style="text-align:right">29,70 %</td>
+  <td style="text-align:right">7,53 %</td>
+  <td style="text-align:right">0,07990</td>
+  <td style="text-align:right">0,479</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">12,54 %</td>
+  <td style="text-align:right">79,21 %</td>
+  <td style="text-align:right">0,76 %</td>
+  <td style="text-align:right">0,10627</td>
+  <td style="text-align:right">0,549</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td style="text-align:right">Referencia</td>
+  <td style="text-align:right">1,48 %</td>
+  <td style="text-align:right">70,56 %</td>
+  <td style="text-align:right">0,67 %</td>
+  <td style="text-align:right">0,12609</td>
+  <td style="text-align:right">0,804</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de predicciones guardadas.</em></p>
+<h2 id="sec-s4-11">S4.11 Pérdida por semilla en enero</h2>
+<p>Las columnas conservan las tres ejecuciones de cada modelo estocástico sobre las mismas horas de enero. Su desviación estándar muestral describe la variación entre ejecuciones.</p>
+<p class="caption" id="cuadro-s4-10"><strong>Cuadro S4.10. Pérdida pinball normalizada por semilla en enero de 2024.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th style="text-align:right">Vía</th>
+  <th style="text-align:right">Semilla 42</th>
+  <th style="text-align:right">Semilla 1</th>
+  <th style="text-align:right">Semilla 2</th>
+  <th style="text-align:right">Desviación estándar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,015318</td>
+  <td style="text-align:right">0,015756</td>
+  <td style="text-align:right">0,015665</td>
+  <td style="text-align:right">0,000231</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,015448</td>
+  <td style="text-align:right">0,015834</td>
+  <td style="text-align:right">0,015771</td>
+  <td style="text-align:right">0,000207</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,015883</td>
+  <td style="text-align:right">0,015933</td>
+  <td style="text-align:right">0,015834</td>
+  <td style="text-align:right">0,000050</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,016191</td>
+  <td style="text-align:right">0,017143</td>
+  <td style="text-align:right">0,016184</td>
+  <td style="text-align:right">0,000551</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,016185</td>
+  <td style="text-align:right">0,017883</td>
+  <td style="text-align:right">0,016421</td>
+  <td style="text-align:right">0,000919</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,016767</td>
+  <td style="text-align:right">0,016988</td>
+  <td style="text-align:right">0,016810</td>
+  <td style="text-align:right">0,000117</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,016958</td>
+  <td style="text-align:right">0,017131</td>
+  <td style="text-align:right">0,016481</td>
+  <td style="text-align:right">0,000337</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,016746</td>
+  <td style="text-align:right">0,017267</td>
+  <td style="text-align:right">0,016703</td>
+  <td style="text-align:right">0,000314</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,016747</td>
+  <td style="text-align:right">0,017242</td>
+  <td style="text-align:right">0,017842</td>
+  <td style="text-align:right">0,000548</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,016797</td>
+  <td style="text-align:right">0,017230</td>
+  <td style="text-align:right">0,018013</td>
+  <td style="text-align:right">0,000617</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,017555</td>
+  <td style="text-align:right">0,017280</td>
+  <td style="text-align:right">0,017451</td>
+  <td style="text-align:right">0,000139</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,016837</td>
+  <td style="text-align:right">0,018196</td>
+  <td style="text-align:right">0,017329</td>
+  <td style="text-align:right">0,000688</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,017594</td>
+  <td style="text-align:right">0,017312</td>
+  <td style="text-align:right">0,017500</td>
+  <td style="text-align:right">0,000144</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,017602</td>
+  <td style="text-align:right">0,017512</td>
+  <td style="text-align:right">0,017595</td>
+  <td style="text-align:right">0,000050</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,016937</td>
+  <td style="text-align:right">0,018228</td>
+  <td style="text-align:right">0,017558</td>
+  <td style="text-align:right">0,000646</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,017460</td>
+  <td style="text-align:right">0,017706</td>
+  <td style="text-align:right">0,017597</td>
+  <td style="text-align:right">0,000123</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,016681</td>
+  <td style="text-align:right">0,017319</td>
+  <td style="text-align:right">0,019348</td>
+  <td style="text-align:right">0,001392</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,017985</td>
+  <td style="text-align:right">0,017990</td>
+  <td style="text-align:right">0,017971</td>
+  <td style="text-align:right">0,000010</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,018003</td>
+  <td style="text-align:right">0,017974</td>
+  <td style="text-align:right">0,017971</td>
+  <td style="text-align:right">0,000018</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,017798</td>
+  <td style="text-align:right">0,018232</td>
+  <td style="text-align:right">0,017978</td>
+  <td style="text-align:right">0,000218</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,018460</td>
+  <td style="text-align:right">0,018168</td>
+  <td style="text-align:right">0,018713</td>
+  <td style="text-align:right">0,000273</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,019262</td>
+  <td style="text-align:right">0,017801</td>
+  <td style="text-align:right">0,018297</td>
+  <td style="text-align:right">0,000743</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,018405</td>
+  <td style="text-align:right">0,018498</td>
+  <td style="text-align:right">0,018491</td>
+  <td style="text-align:right">0,000052</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,018563</td>
+  <td style="text-align:right">0,018290</td>
+  <td style="text-align:right">0,018770</td>
+  <td style="text-align:right">0,000240</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">0,019409</td>
+  <td style="text-align:right">0,018552</td>
+  <td style="text-align:right">0,018210</td>
+  <td style="text-align:right">0,000618</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">0,019356</td>
+  <td style="text-align:right">0,018677</td>
+  <td style="text-align:right">0,018426</td>
+  <td style="text-align:right">0,000481</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,018947</td>
+  <td style="text-align:right">0,019255</td>
+  <td style="text-align:right">0,018926</td>
+  <td style="text-align:right">0,000184</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">0,027369</td>
+  <td style="text-align:right">0,027248</td>
+  <td style="text-align:right">0,025966</td>
+  <td style="text-align:right">0,000777</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de los resultados y registros del experimento.</em></p>
+<h2 id="sec-s4-12">S4.12 Cobertura por contexto de Chronos-2 LoRA, LightGBM y LSTM en enero</h2>
+<p>El cuadro aplica las agrupaciones solares y de calendario de <a href="s4.html#sec-s4-7" class="crossref">S4.7</a> a las predicciones de enero de los tres modelos indicados y sus procedimientos disponibles.</p>
+<p class="caption" id="cuadro-s4-11"><strong>Cuadro S4.11. Cobertura por contexto de Chronos-2 LoRA, LightGBM y LSTM en enero de 2024.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Contexto</th>
+  <th style="text-align:right">Horas</th>
+  <th style="text-align:right">Chronos A</th>
+  <th style="text-align:right">Chronos C</th>
+  <th style="text-align:right">LightGBM A</th>
+  <th style="text-align:right">LightGBM C</th>
+  <th style="text-align:right">LSTM A</th>
+  <th style="text-align:right">LSTM C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Recurso potencial bajo</td>
+  <td style="text-align:right">403</td>
+  <td style="text-align:right">87,01 %</td>
+  <td style="text-align:right">87,59 %</td>
+  <td style="text-align:right">85,36 %</td>
+  <td style="text-align:right">90,49 %</td>
+  <td style="text-align:right">73,12 %</td>
+  <td style="text-align:right">89,66 %</td>
+</tr>
+<tr>
+  <td>Horas solares: índice ≤ 0,858</td>
+  <td style="text-align:right">112</td>
+  <td style="text-align:right">75,60 %</td>
+  <td style="text-align:right">84,23 %</td>
+  <td style="text-align:right">84,82 %</td>
+  <td style="text-align:right">88,39 %</td>
+  <td style="text-align:right">71,73 %</td>
+  <td style="text-align:right">86,90 %</td>
+</tr>
+<tr>
+  <td>Horas solares: índice &gt; 0,858</td>
+  <td style="text-align:right">229</td>
+  <td style="text-align:right">88,21 %</td>
+  <td style="text-align:right">94,61 %</td>
+  <td style="text-align:right">91,85 %</td>
+  <td style="text-align:right">93,30 %</td>
+  <td style="text-align:right">89,96 %</td>
+  <td style="text-align:right">96,65 %</td>
+</tr>
+<tr>
+  <td>Lunes a viernes</td>
+  <td style="text-align:right">552</td>
+  <td style="text-align:right">86,11 %</td>
+  <td style="text-align:right">89,19 %</td>
+  <td style="text-align:right">88,95 %</td>
+  <td style="text-align:right">91,30 %</td>
+  <td style="text-align:right">80,68 %</td>
+  <td style="text-align:right">92,27 %</td>
+</tr>
+<tr>
+  <td>Sábados</td>
+  <td style="text-align:right">96</td>
+  <td style="text-align:right">82,29 %</td>
+  <td style="text-align:right">86,81 %</td>
+  <td style="text-align:right">79,86 %</td>
+  <td style="text-align:right">87,85 %</td>
+  <td style="text-align:right">64,93 %</td>
+  <td style="text-align:right">80,21 %</td>
+</tr>
+<tr>
+  <td>Domingos</td>
+  <td style="text-align:right">96</td>
+  <td style="text-align:right">86,46 %</td>
+  <td style="text-align:right">92,01 %</td>
+  <td style="text-align:right">85,07 %</td>
+  <td style="text-align:right">92,71 %</td>
+  <td style="text-align:right">76,39 %</td>
+  <td style="text-align:right">97,57 %</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia a partir de las predicciones y covariables guardadas.</em></p>
+<h2 id="sec-s4-13">S4.13 Trayectorias de la segunda quincena de enero</h2>
+<p>Las <a href="s4.html#figura-s4-8" class="crossref">Figuras S4.8</a> y <a href="s4.html#figura-s4-9" class="crossref">S4.9</a> presentan los dieciséis días del 16 al 31 de enero. Se mantienen Chronos-2 con LoRA, LightGBM y LSTM, en sus procedimientos A y C, con la semilla 42. Los períodos comprenden ocho días cada uno y se presentan completos, incluyendo las 384 horas de la quincena.</p>
+<p>La línea oscura representa la demanda observada, la línea de color representa P50 y la banda representa P5–P95. Un punto rojo identifica una observación estrictamente inferior a P5 o superior a P95. El conteo de cada panel utiliza únicamente ese modelo, semilla y período; las observaciones que coinciden con un límite se consideran incluidas. Las escalas verticales son comunes a ambas figuras. Esta inspección complementa las métricas del mes completo y permite localizar las observaciones fuera de los intervalos.</p>
+<p class="caption" id="figura-s4-8"><strong>Figura S4.8. Demanda observada e intervalos predictivos del 16 al 23 de enero de 2024.</strong></p>
+<p class="image"><img src="assets/0b200b99d731.png" alt="Trayectorias de Chronos-2 LoRA, LightGBM y LSTM, procedimientos A y C, con todas las observaciones fuera del intervalo marcadas en rojo entre el 16 y el 23 de enero" loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> Cada panel comprende 192 horas. La columna izquierda corresponde a A; la derecha, a C. Cada par comparte exactamente P50. Las cifras en rojo indican la cantidad de observaciones fuera de su intervalo sobre las horas representadas.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones y mediciones guardadas del conjunto de testeo.</em></p>
+<p class="caption" id="figura-s4-9"><strong>Figura S4.9. Demanda observada e intervalos predictivos del 24 al 31 de enero de 2024.</strong></p>
+<p class="image"><img src="assets/48f05a887e6b.png" alt="Trayectorias de Chronos-2 LoRA, LightGBM y LSTM, procedimientos A y C, con todas las observaciones fuera del intervalo marcadas en rojo entre el 24 y el 31 de enero" loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> Se conserva la definición de la <a href="s4.html#figura-s4-8" class="crossref">Figura S4.8</a>, con 192 horas por panel. Los pronósticos diarios de veinticuatro horas se unen para mostrar su evolución durante el período.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones y mediciones guardadas del conjunto de testeo.</em></p>
+<h2 id="sec-s4-14">S4.14 Desviación de la cobertura en las veinticuatro horas</h2>
+<p>El cuadro presenta el indicador definido en la Sección 4.6.2 para cada predictor probabilístico y su versión con calibración de cuantiles. Resume el perfil completo del día mediante el promedio de las diferencias absolutas entre la cobertura de cada hora y el 90 %.</p>
+<p class="caption" id="cuadro-s4-12"><strong>Cuadro S4.12. Desviación absoluta media de la cobertura horaria en testeo.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Predictor probabilístico</th>
+  <th style="text-align:right">Antes de calibrar (A)</th>
+  <th style="text-align:right">Después de calibrar (C)</th>
+  <th style="text-align:right">Reducción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td style="text-align:right">7,42</td>
+  <td style="text-align:right">4,40</td>
+  <td style="text-align:right">3,03</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td style="text-align:right">4,68</td>
+  <td style="text-align:right">2,37</td>
+  <td style="text-align:right">2,32</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td style="text-align:right">6,00</td>
+  <td style="text-align:right">2,55</td>
+  <td style="text-align:right">3,45</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td style="text-align:right">14,77</td>
+  <td style="text-align:right">2,64</td>
+  <td style="text-align:right">12,13</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td style="text-align:right">6,62</td>
+  <td style="text-align:right">3,27</td>
+  <td style="text-align:right">3,35</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td style="text-align:right">11,01</td>
+  <td style="text-align:right">2,80</td>
+  <td style="text-align:right">8,21</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td style="text-align:right">4,37</td>
+  <td style="text-align:right">4,04</td>
+  <td style="text-align:right">0,33</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td style="text-align:right">8,03</td>
+  <td style="text-align:right">3,61</td>
+  <td style="text-align:right">4,41</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td style="text-align:right">5,80</td>
+  <td style="text-align:right">4,62</td>
+  <td style="text-align:right">1,19</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td style="text-align:right">5,12</td>
+  <td style="text-align:right">4,59</td>
+  <td style="text-align:right">0,53</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td style="text-align:right">4,42</td>
+  <td style="text-align:right">2,94</td>
+  <td style="text-align:right">1,48</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td style="text-align:right">3,19</td>
+  <td style="text-align:right">3,71</td>
+  <td style="text-align:right">-0,52</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td style="text-align:right">7,39</td>
+  <td style="text-align:right">2,55</td>
+  <td style="text-align:right">4,85</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td style="text-align:right">5,49</td>
+  <td style="text-align:right">2,58</td>
+  <td style="text-align:right">2,91</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Valores en puntos porcentuales. La reducción es la diferencia entre A y C; un valor positivo indica mejora. Las coberturas horarias se promedian entre ejecuciones antes de calcular el indicador. Cada hora reúne 119 observaciones temporales por ejecución. La comparación mantiene el predictor y P50. Las curvas horarias completas se presentan en la Sección S4.8.</p>
+<p class="source"><em>Fuente: elaboración propia.</em></p>
+</div><div class="page-footer">Las referencias a los capítulos 1–6 corresponden al cuerpo del trabajo. Los enlaces entre anexos y suplemento permiten consultar sus ampliaciones. Todos los resultados conservan sus períodos y configuraciones originales.</div></article></main></div><dialog id="zoom"><button>Cerrar imagen</button><img alt=""></dialog><script src="lectura.js"></script></body></html>

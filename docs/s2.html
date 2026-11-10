@@ -1,0 +1,935 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S2 · Dominios de búsqueda</title><link rel="stylesheet" href="estilos.css"></head><body><header><a class="brand" href="index.html">Demanda neta · material complementario</a><a href="index.html">Suplemento</a><a href="referencias.html">Referencias</a></header><div class="layout"><nav class="toc" aria-label="Índice del documento"><strong>Contenido</strong><a class="level2" href="#sec-s2-1">S2.1 Orden de cálculo de los ensayos</a><a class="level2" href="#sec-s2-2">S2.2 Dominios de búsqueda</a><a class="level3" href="#sec-s2-2-1">S2.2.1 Covariables y calibración</a><a class="level3" href="#sec-s2-2-2">S2.2.2 Regresión lineal cuantílica</a><a class="level3" href="#sec-s2-2-3">S2.2.3 Regresión lineal</a><a class="level3" href="#sec-s2-2-4">S2.2.4 Ridge</a><a class="level3" href="#sec-s2-2-5">S2.2.5 Elastic Net</a><a class="level3" href="#sec-s2-2-6">S2.2.6 Ridge bayesiana con dispersión nativa</a><a class="level3" href="#sec-s2-2-7">S2.2.7 Ridge bayesiana con dispersión contextual</a><a class="level3" href="#sec-s2-2-8">S2.2.8 Prophet</a><a class="level3" href="#sec-s2-2-9">S2.2.9 LightGBM</a><a class="level3" href="#sec-s2-2-10">S2.2.10 NGBoost con historia del origen</a><a class="level3" href="#sec-s2-2-11">S2.2.11 NGBoost con referencias alineadas</a><a class="level3" href="#sec-s2-2-12">S2.2.12 DLinear</a><a class="level3" href="#sec-s2-2-13">S2.2.13 NLinear</a><a class="level3" href="#sec-s2-2-14">S2.2.14 LSTM</a><a class="level3" href="#sec-s2-2-15">S2.2.15 TiDE</a><a class="level3" href="#sec-s2-2-16">S2.2.16 TSMixer</a><a class="level3" href="#sec-s2-2-17">S2.2.17 Transformer</a><a class="level3" href="#sec-s2-2-18">S2.2.18 NHITS</a><a class="level3" href="#sec-s2-2-19">S2.2.19 Chronos-2 LoRA</a><a class="level3" href="#sec-s2-2-20">S2.2.20 Chronos-2 con pesos fijos</a></nav><main class="reading"><div class="review-note"><p>Versión del 10 de noviembre de 2026</p><div class="toolbar"><button data-font="-1">A−</button><button data-font="1">A+</button><button onclick="window.print()">Imprimir</button></div><label class="table-filter">Filtrar filas de cuadros <input data-filter-tables placeholder="Nombre de modelo o parámetro" aria-label="Filtrar filas de los cuadros"></label></div><article class="paper"><nav class="doc-nav"><a href="s1.html">S1</a><a href="s2.html">S2</a><a href="s3.html">S3</a><a href="s4.html">S4</a><a href="s5.html">S5</a><a href="s6.html">S6</a></nav><div><h1 id="suplemento-s2-dominios-de-busqueda-y-orden-de-evaluacion">Suplemento S2. Dominios de búsqueda y orden de evaluación</h1>
+<p>Este suplemento documenta las alternativas exploradas durante la selección de configuraciones. La <a href="s2.html#sec-s2-1" class="crossref">Sección S2.1</a> describe la ejecución de los meses de validación y <a href="s2.html#sec-s2-2" class="crossref">S2.2</a> presenta las opciones de covariables, calibración e hiperparámetros. Las configuraciones finalmente elegidas se reúnen en el Anexo B; los ensayos completos, podados y fallidos, en el Cuadro S5.2.</p>
+<h2 id="sec-s2-1">S2.1 Orden de cálculo de los ensayos</h2>
+<p>En el aprendizaje probabilístico directo (A), los períodos de validación se procesan de diciembre a abril de 2023. Cada mes conserva su entrenamiento anterior. En la predicción puntual con calibración conforme (B), primero se generan cronológicamente los pronósticos de marzo a diciembre para reconstruir los errores disponibles en cada emisión; después, sus pérdidas se presentan a la regla de poda de diciembre a abril. Esta generación previa limita el ahorro computacional de la poda en B.</p>
+<p>El <a href="s5.html#cuadro-s5-2" class="crossref">Cuadro S5.2</a> presenta los ensayos completos, podados y fallidos de cada búsqueda. La Sección 4.7.2 define su tratamiento dentro del presupuesto de optimización.</p>
+<h2 id="sec-s2-2">S2.2 Dominios de búsqueda</h2>
+<p>Los cuadros siguientes distinguen las alternativas disponibles durante la optimización de los valores seleccionados de B.1. Los intervalos indican los límites declarados; las listas enumeran opciones discretas. La indicación «escala logarítmica» corresponde a la escala de muestreo. Los nombres de parámetros permiten localizar su equivalente en el código.</p>
+<h3 id="sec-s2-2-1">S2.2.1 Covariables y calibración</h3>
+<p>Las ocho configuraciones de covariables resultan del producto de dos representaciones solares, dos conjuntos meteorológicos y la inclusión opcional de interacciones. Su definición corresponde a la Sección 4.4.</p>
+<p class="caption" id="cuadro-s2-1"><strong>Cuadro S2.1. Componentes del código de configuración de covariables.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Componente</th>
+  <th>Valores del código</th>
+  <th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Representación solar</td>
+  <td><code>central</code>, <code>weighted</code></td>
+  <td>Celda próxima al centro del área; combinación ponderada por cantidad de hogares con paneles identificados</td>
+</tr>
+<tr>
+  <td>Conjunto meteorológico</td>
+  <td><code>compact</code>, <code>full</code></td>
+  <td>GHI, temperatura y humedad; el conjunto completo añade DNI, DHI, GHI bajo cielo despejado y tipo de nube</td>
+</tr>
+<tr>
+  <td>Interacciones</td>
+  <td><code>interactions_0</code>, <code>interactions_1</code></td>
+  <td>Sin o con interacciones de temperatura con los indicadores de sábado y domingo</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: especificación de las covariables del experimento.</em></p>
+<p>Por ejemplo, <code>weighted_compact_interactions_1</code> identifica la representación solar ponderada, el conjunto meteorológico compacto y la inclusión de interacciones. Esta codificación se utiliza en los Cuadros B.1 y B.2.</p>
+<p class="caption" id="cuadro-s2-2"><strong>Cuadro S2.2. Dominios de los parámetros de calibración de B y C.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Dominio</th>
+  <th>Interpretación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>cal_window</code></td>
+  <td>30, 60, 90 días; historia creciente (<code>expanding</code>)</td>
+  <td>Extensión del archivo de errores</td>
+</tr>
+<tr>
+  <td><code>cal_mode</code></td>
+  <td>Uniforme (<code>uniform</code>), contextual (<code>context</code>)</td>
+  <td>Regla de ponderación de los errores</td>
+</tr>
+<tr>
+  <td><code>cal_bandwidth</code></td>
+  <td>[0,15; 3], escala logarítmica</td>
+  <td>Ancho de banda de la ponderación contextual</td>
+</tr>
+<tr>
+  <td><code>cal_cap</code></td>
+  <td>0,01; 0,02</td>
+  <td>Peso máximo de un error en la ponderación contextual</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> El ancho de banda y el peso máximo se activan con ponderación contextual. En B se seleccionan junto con el predictor; en C se conserva el predictor A y se seleccionan los parámetros de calibración.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-2">S2.2.2 Regresión lineal cuantílica</h3>
+<p class="caption" id="cuadro-s2-3"><strong>Cuadro S2.3. Dominios del predictor Regresión lineal cuantílica.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>alpha</code></td>
+  <td>[1e-06, 1.0] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>regularized</code></td>
+  <td>False, True</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. La calibración adicional C conserva el predictor seleccionado y utiliza los dominios del Cuadro S2.2. <code>alpha</code> se activa cuando <code>regularized</code> es verdadero; en caso contrario la penalización es cero.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-3">S2.2.3 Regresión lineal</h3>
+<p class="caption" id="cuadro-s2-4"><strong>Cuadro S2.4. Dominios del predictor Regresión lineal.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Hiperparámetros del predictor</td>
+  <td>—</td>
+  <td>Sin hiperparámetros adicionales de ajuste</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Se evalúa la versión puntual con calibración conforme; sus parámetros de calibración figuran en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-4">S2.2.4 Ridge</h3>
+<p class="caption" id="cuadro-s2-5"><strong>Cuadro S2.5. Dominios del predictor Ridge.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>alpha</code></td>
+  <td>—</td>
+  <td>[1e-06, 10000.0] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>fit_intercept</code></td>
+  <td>—</td>
+  <td>True, False</td>
+</tr>
+<tr>
+  <td><code>lags</code></td>
+  <td>—</td>
+  <td>48, 96, 168, 336</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Se evalúa la versión puntual con calibración conforme; sus parámetros de calibración figuran en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-5">S2.2.5 Elastic Net</h3>
+<p class="caption" id="cuadro-s2-6"><strong>Cuadro S2.6. Dominios del predictor Elastic Net.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>alpha</code></td>
+  <td>—</td>
+  <td>[1e-06, 10.0] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>fit_intercept</code></td>
+  <td>—</td>
+  <td>True, False</td>
+</tr>
+<tr>
+  <td><code>l1_ratio</code></td>
+  <td>—</td>
+  <td>[0.0, 1.0]</td>
+</tr>
+<tr>
+  <td><code>lags</code></td>
+  <td>—</td>
+  <td>48, 96, 168, 336</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Se evalúa la versión puntual con calibración conforme; sus parámetros de calibración figuran en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-6">S2.2.6 Ridge bayesiana con dispersión nativa</h3>
+<p class="caption" id="cuadro-s2-7"><strong>Cuadro S2.7. Dominios del predictor Ridge bayesiana con dispersión nativa.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>alpha_1</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>alpha_2</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lags</code></td>
+  <td>48, 96, 168, 336</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lambda_1</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lambda_2</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. La calibración adicional C conserva el predictor seleccionado y utiliza los dominios del Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-7">S2.2.7 Ridge bayesiana con dispersión contextual</h3>
+<p class="caption" id="cuadro-s2-8"><strong>Cuadro S2.8. Dominios del predictor Ridge bayesiana con dispersión contextual.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>alpha_1</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>alpha_2</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lags</code></td>
+  <td>48, 96, 168, 336</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lambda_1</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lambda_2</code></td>
+  <td>[1e-06, 0.01] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>variance_alpha</code></td>
+  <td>[0.0001, 10.0] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. La calibración adicional C conserva el predictor seleccionado y utiliza los dominios del Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-8">S2.2.8 Prophet</h3>
+<p class="caption" id="cuadro-s2-9"><strong>Cuadro S2.9. Dominios del predictor Prophet.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>changepoint_prior_scale</code></td>
+  <td>—</td>
+  <td>[0.001, 0.5] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>changepoint_range</code></td>
+  <td>—</td>
+  <td>[0.8, 0.95]</td>
+</tr>
+<tr>
+  <td><code>daily_fourier_order</code></td>
+  <td>—</td>
+  <td>[3, 15] · paso 1</td>
+</tr>
+<tr>
+  <td><code>daily_prior_scale</code></td>
+  <td>—</td>
+  <td>[0.005, 10.0] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>holidays_prior_scale</code></td>
+  <td>—</td>
+  <td>[0.01, 10.0] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>n_changepoints</code></td>
+  <td>—</td>
+  <td>[10, 100] · paso 1</td>
+</tr>
+<tr>
+  <td><code>seasonality_mode</code></td>
+  <td>—</td>
+  <td>additive, multiplicative</td>
+</tr>
+<tr>
+  <td><code>seasonality_prior_scale</code></td>
+  <td>—</td>
+  <td>[0.005, 10.0] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>weekend_fourier_order</code></td>
+  <td>—</td>
+  <td>[1, 10] · paso 1</td>
+</tr>
+<tr>
+  <td><code>weekend_prior_scale</code></td>
+  <td>—</td>
+  <td>[0.01, 10.0] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>weekly_fourier_order</code></td>
+  <td>—</td>
+  <td>[1, 20] · paso 1</td>
+</tr>
+<tr>
+  <td><code>weekly_prior_scale</code></td>
+  <td>—</td>
+  <td>[0.01, 10.0] · escala logarítmica</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Se evalúa la versión puntual con calibración conforme; sus parámetros de calibración figuran en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-9">S2.2.9 LightGBM</h3>
+<p class="caption" id="cuadro-s2-10"><strong>Cuadro S2.10. Dominios del predictor LightGBM.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>colsample_bytree</code></td>
+  <td>[0.5, 1.0]</td>
+  <td>[0.5, 1.0]</td>
+</tr>
+<tr>
+  <td><code>lags</code></td>
+  <td>48, 96, 168</td>
+  <td>48, 96, 168</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.01, 0.3] · escala logarítmica</td>
+  <td>[0.01, 0.3] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>max_depth</code></td>
+  <td>[3, 16] · paso 1</td>
+  <td>[3, 16] · paso 1</td>
+</tr>
+<tr>
+  <td><code>min_child_samples</code></td>
+  <td>[5, 100] · paso 1</td>
+  <td>[5, 100] · paso 1</td>
+</tr>
+<tr>
+  <td><code>min_split_gain</code></td>
+  <td>[0.0, 1.0]</td>
+  <td>[0.0, 1.0]</td>
+</tr>
+<tr>
+  <td><code>n_estimators</code></td>
+  <td>[100, 1600] · paso 1</td>
+  <td>[100, 1600] · paso 1</td>
+</tr>
+<tr>
+  <td><code>num_leaves</code></td>
+  <td>[15, 255] · paso 1</td>
+  <td>[15, 255] · paso 1</td>
+</tr>
+<tr>
+  <td><code>path_smooth</code></td>
+  <td>[0.0, 10.0]</td>
+  <td>[0.0, 10.0]</td>
+</tr>
+<tr>
+  <td><code>reg_alpha</code></td>
+  <td>[0.0, 10.0]</td>
+  <td>[0.0, 10.0]</td>
+</tr>
+<tr>
+  <td><code>reg_lambda</code></td>
+  <td>[0.0, 10.0]</td>
+  <td>[0.0, 10.0]</td>
+</tr>
+<tr>
+  <td><code>subsample</code></td>
+  <td>[0.5, 1.0]</td>
+  <td>[0.5, 1.0]</td>
+</tr>
+<tr>
+  <td><code>subsample_freq</code></td>
+  <td>[0, 7] · paso 1</td>
+  <td>[0, 7] · paso 1</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Los parámetros de calibración de B se detallan en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-10">S2.2.10 NGBoost con historia del origen</h3>
+<p class="caption" id="cuadro-s2-11"><strong>Cuadro S2.11. Dominios del predictor NGBoost con historia del origen.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>col_sample</code></td>
+  <td>[0.7, 1.0]</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lags</code></td>
+  <td>48, 96, 168</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.01, 0.1] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>max_depth</code></td>
+  <td>[2, 4] · paso 1</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>min_samples_leaf</code></td>
+  <td>[5, 50] · paso 1</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>minibatch_frac</code></td>
+  <td>[0.7, 1.0]</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>n_estimators</code></td>
+  <td>[100, 600] · paso 50</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. La calibración adicional C conserva el predictor seleccionado y utiliza los dominios del Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-11">S2.2.11 NGBoost con referencias alineadas</h3>
+<p class="caption" id="cuadro-s2-12"><strong>Cuadro S2.12. Dominios del predictor NGBoost con referencias alineadas.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>col_sample</code></td>
+  <td>[0.7, 1.0]</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>lags</code></td>
+  <td>48, 96, 168</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.01, 0.1] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>max_depth</code></td>
+  <td>[2, 4] · paso 1</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>min_samples_leaf</code></td>
+  <td>[5, 50] · paso 1</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>minibatch_frac</code></td>
+  <td>[0.7, 1.0]</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>n_estimators</code></td>
+  <td>[100, 600] · paso 50</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. La calibración adicional C conserva el predictor seleccionado y utiliza los dominios del Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-12">S2.2.12 DLinear</h3>
+<p class="caption" id="cuadro-s2-13"><strong>Cuadro S2.13. Dominios del predictor DLinear.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>batch_size</code></td>
+  <td>32, 64, 128, 256</td>
+  <td>32, 64, 128, 256</td>
+</tr>
+<tr>
+  <td><code>input_chunk_length</code></td>
+  <td>48, 96, 168, 336</td>
+  <td>48, 96, 168, 336</td>
+</tr>
+<tr>
+  <td><code>kernel_size</code></td>
+  <td>13, 25, 49</td>
+  <td>13, 25, 49</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.0001, 0.01] · escala logarítmica</td>
+  <td>[0.0001, 0.01] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>n_epochs</code></td>
+  <td>[20, 60] · paso 1</td>
+  <td>[20, 60] · paso 1</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Los parámetros de calibración de B se detallan en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-13">S2.2.13 NLinear</h3>
+<p class="caption" id="cuadro-s2-14"><strong>Cuadro S2.14. Dominios del predictor NLinear.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>batch_size</code></td>
+  <td>—</td>
+  <td>32, 64, 128, 256</td>
+</tr>
+<tr>
+  <td><code>input_chunk_length</code></td>
+  <td>—</td>
+  <td>48, 96, 168, 336</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>—</td>
+  <td>[0.0001, 0.01] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>n_epochs</code></td>
+  <td>—</td>
+  <td>[20, 80] · paso 1</td>
+</tr>
+<tr>
+  <td><code>normalize</code></td>
+  <td>—</td>
+  <td>True, False</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Se evalúa la versión puntual con calibración conforme; sus parámetros de calibración figuran en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-14">S2.2.14 LSTM</h3>
+<p class="caption" id="cuadro-s2-15"><strong>Cuadro S2.15. Dominios del predictor LSTM.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>batch_size</code></td>
+  <td>32, 64, 128, 256</td>
+  <td>32, 64, 128, 256</td>
+</tr>
+<tr>
+  <td><code>dropout</code></td>
+  <td>[0.0, 0.3]</td>
+  <td>[0.0, 0.3]</td>
+</tr>
+<tr>
+  <td><code>hidden_dim</code></td>
+  <td>[32, 256] · paso 1</td>
+  <td>[32, 256] · paso 1</td>
+</tr>
+<tr>
+  <td><code>input_chunk_length</code></td>
+  <td>48, 96, 168</td>
+  <td>48, 96, 168</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.0001, 0.001] · escala logarítmica</td>
+  <td>[0.0001, 0.001] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>n_epochs</code></td>
+  <td>[20, 60] · paso 1</td>
+  <td>[20, 60] · paso 1</td>
+</tr>
+<tr>
+  <td><code>n_rnn_layers</code></td>
+  <td>[1, 3] · paso 1</td>
+  <td>[1, 3] · paso 1</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Los parámetros de calibración de B se detallan en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-15">S2.2.15 TiDE</h3>
+<p class="caption" id="cuadro-s2-16"><strong>Cuadro S2.16. Dominios del predictor TiDE.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>batch_size</code></td>
+  <td>32, 64, 128, 256</td>
+  <td>32, 64, 128, 256</td>
+</tr>
+<tr>
+  <td><code>dropout</code></td>
+  <td>[0.0, 0.3]</td>
+  <td>[0.0, 0.3]</td>
+</tr>
+<tr>
+  <td><code>hidden_size</code></td>
+  <td>[64, 512] · paso 1</td>
+  <td>[64, 512] · paso 1</td>
+</tr>
+<tr>
+  <td><code>input_chunk_length</code></td>
+  <td>48, 96, 168</td>
+  <td>48, 96, 168</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.0001, 0.001] · escala logarítmica</td>
+  <td>[0.0001, 0.001] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>n_epochs</code></td>
+  <td>[20, 60] · paso 1</td>
+  <td>[20, 60] · paso 1</td>
+</tr>
+<tr>
+  <td><code>num_decoder_layers</code></td>
+  <td>[1, 3] · paso 1</td>
+  <td>[1, 3] · paso 1</td>
+</tr>
+<tr>
+  <td><code>num_encoder_layers</code></td>
+  <td>[1, 3] · paso 1</td>
+  <td>[1, 3] · paso 1</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Los parámetros de calibración de B se detallan en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-16">S2.2.16 TSMixer</h3>
+<p class="caption" id="cuadro-s2-17"><strong>Cuadro S2.17. Dominios del predictor TSMixer.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>batch_size</code></td>
+  <td>32, 64, 128, 256</td>
+  <td>32, 64, 128, 256</td>
+</tr>
+<tr>
+  <td><code>dropout</code></td>
+  <td>[0.0, 0.3]</td>
+  <td>[0.0, 0.3]</td>
+</tr>
+<tr>
+  <td><code>ff_size</code></td>
+  <td>[16, 256] · paso 1</td>
+  <td>[16, 256] · paso 1</td>
+</tr>
+<tr>
+  <td><code>hidden_size</code></td>
+  <td>[32, 256] · paso 1</td>
+  <td>[32, 256] · paso 1</td>
+</tr>
+<tr>
+  <td><code>input_chunk_length</code></td>
+  <td>48, 96, 168</td>
+  <td>48, 96, 168</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[5e-05, 0.001] · escala logarítmica</td>
+  <td>[5e-05, 0.001] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>n_epochs</code></td>
+  <td>[20, 60] · paso 1</td>
+  <td>[20, 60] · paso 1</td>
+</tr>
+<tr>
+  <td><code>num_blocks</code></td>
+  <td>[1, 4] · paso 1</td>
+  <td>[1, 4] · paso 1</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Los parámetros de calibración de B se detallan en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-17">S2.2.17 Transformer</h3>
+<p class="caption" id="cuadro-s2-18"><strong>Cuadro S2.18. Dominios del predictor Transformer.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>batch_size</code></td>
+  <td>32, 64, 128, 256</td>
+  <td>32, 64, 128, 256</td>
+</tr>
+<tr>
+  <td><code>d_model</code></td>
+  <td>32, 64, 128</td>
+  <td>32, 64, 128</td>
+</tr>
+<tr>
+  <td><code>dropout</code></td>
+  <td>[0.0, 0.3]</td>
+  <td>[0.0, 0.3]</td>
+</tr>
+<tr>
+  <td><code>ff_multiplier</code></td>
+  <td>2, 4</td>
+  <td>2, 4</td>
+</tr>
+<tr>
+  <td><code>input_chunk_length</code></td>
+  <td>48, 96, 168</td>
+  <td>48, 96, 168</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.0001, 0.001] · escala logarítmica</td>
+  <td>[0.0001, 0.001] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>n_epochs</code></td>
+  <td>[20, 60] · paso 1</td>
+  <td>[20, 60] · paso 1</td>
+</tr>
+<tr>
+  <td><code>nhead</code></td>
+  <td>2, 4, 8</td>
+  <td>2, 4, 8</td>
+</tr>
+<tr>
+  <td><code>num_decoder_layers</code></td>
+  <td>1, 2</td>
+  <td>1, 2</td>
+</tr>
+<tr>
+  <td><code>num_encoder_layers</code></td>
+  <td>1, 2, 3</td>
+  <td>1, 2, 3</td>
+</tr>
+<tr>
+  <td><code>weight_decay</code></td>
+  <td>[1e-07, 0.001] · escala logarítmica</td>
+  <td>[1e-07, 0.001] · escala logarítmica</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Los parámetros de calibración de B se detallan en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-18">S2.2.18 NHITS</h3>
+<p class="caption" id="cuadro-s2-19"><strong>Cuadro S2.19. Dominios del predictor NHITS.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>batch_size</code></td>
+  <td>64, 128, 256</td>
+  <td>64, 128, 256</td>
+</tr>
+<tr>
+  <td><code>blocks_per_stack</code></td>
+  <td>1, 2</td>
+  <td>1, 2</td>
+</tr>
+<tr>
+  <td><code>context_length</code></td>
+  <td>48, 96, 168, 336</td>
+  <td>48, 96, 168, 336</td>
+</tr>
+<tr>
+  <td><code>dropout</code></td>
+  <td>[0.0, 0.3]</td>
+  <td>[0.0, 0.3]</td>
+</tr>
+<tr>
+  <td><code>epochs</code></td>
+  <td>[20, 60] · paso 1</td>
+  <td>[20, 60] · paso 1</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[0.0001, 0.003] · escala logarítmica</td>
+  <td>[0.0001, 0.003] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>pooling</code></td>
+  <td>average, max</td>
+  <td>average, max</td>
+</tr>
+<tr>
+  <td><code>resolution</code></td>
+  <td>fine, multiscale</td>
+  <td>fine, multiscale</td>
+</tr>
+<tr>
+  <td><code>weight_decay</code></td>
+  <td>[1e-07, 0.001] · escala logarítmica</td>
+  <td>[1e-07, 0.001] · escala logarítmica</td>
+</tr>
+<tr>
+  <td><code>width</code></td>
+  <td>64, 128, 256</td>
+  <td>64, 128, 256</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. Los parámetros de calibración de B se detallan en el Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-19">S2.2.19 Chronos-2 LoRA</h3>
+<p class="caption" id="cuadro-s2-20"><strong>Cuadro S2.20. Dominios del predictor Chronos-2 LoRA.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Parámetro</th>
+  <th>Aprendizaje directo (A)</th>
+  <th>Puntual + conforme (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>context_length</code></td>
+  <td>168, 336, 720</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>learning_rate</code></td>
+  <td>[1e-05, 0.0003] · escala logarítmica</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>rank</code></td>
+  <td>4, 8, 16</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>steps</code></td>
+  <td>50, 100, 200</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+</div><p class="note"><strong>Nota.</strong> Las covariables se seleccionan entre las ocho alternativas de S2.2.1. La calibración adicional C conserva el predictor seleccionado y utiliza los dominios del Cuadro S2.2.</p>
+<p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+<h3 id="sec-s2-2-20">S2.2.20 Chronos-2 con pesos fijos</h3>
+<p>Se comparan las ocho configuraciones de covariables con contextos de 168, 336 y 720 horas, lo que produce veinticuatro combinaciones. Los pesos preentrenados se conservan. La versión calibrada C utiliza los dominios del Cuadro S2.2.</p>
+</div><div class="page-footer">Las referencias a los capítulos 1–6 corresponden al cuerpo del trabajo. Los enlaces entre anexos y suplemento permiten consultar sus ampliaciones. Todos los resultados conservan sus períodos y configuraciones originales.</div></article></main></div><dialog id="zoom"><button>Cerrar imagen</button><img alt=""></dialog><script src="lectura.js"></script></body></html>

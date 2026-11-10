@@ -1,0 +1,654 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S5 · Trayectorias y búsquedas</title><link rel="stylesheet" href="estilos.css"></head><body><header><a class="brand" href="index.html">Demanda neta · material complementario</a><a href="index.html">Suplemento</a><a href="referencias.html">Referencias</a></header><div class="layout"><nav class="toc" aria-label="Índice del documento"><strong>Contenido</strong><a class="level2" href="#sec-s5-1">S5.1 Validación completa, diciembre y testeo</a><a class="level2" href="#sec-s5-2">S5.2 Trayectorias mensuales de pérdida por procedimiento</a><a class="level2" href="#sec-s5-3">S5.3 Ensayos de las búsquedas</a></nav><main class="reading"><div class="review-note"><p>Versión del 10 de noviembre de 2026</p><div class="toolbar"><button data-font="-1">A−</button><button data-font="1">A+</button><button onclick="window.print()">Imprimir</button></div><label class="table-filter">Filtrar filas de cuadros <input data-filter-tables placeholder="Nombre de modelo o parámetro" aria-label="Filtrar filas de los cuadros"></label></div><article class="paper"><nav class="doc-nav"><a href="s1.html">S1</a><a href="s2.html">S2</a><a href="s3.html">S3</a><a href="s4.html">S4</a><a href="s5.html">S5</a><a href="s6.html">S6</a></nav><div><h1 id="suplemento-s5-trayectorias-mensuales-y-busquedas">Suplemento S5. Trayectorias mensuales y búsquedas</h1>
+<p>Este suplemento reúne dos detalles de la comparación: la evolución mensual de las pérdidas y la cantidad de configuraciones evaluadas durante la búsqueda. Las trayectorias utilizan predicciones de meses posteriores al entrenamiento de cada predictor; los meses de validación participaron además en la elección de las configuraciones.</p>
+<h2 id="sec-s5-1">S5.1 Validación completa, diciembre y testeo</h2>
+<p>Diciembre es el último mes de validación: sus pronósticos utilizan entrenamiento hasta noviembre. El testeo utiliza una historia creciente desde enero–diciembre de 2023. La columna de diciembre conserva una evaluación fuera del entrenamiento del predictor, aunque ese mes participó en la selección de configuraciones.</p>
+<p class="caption" id="cuadro-s5-1"><strong>Cuadro S5.1. Pérdida pinball normalizada en validación, diciembre de 2023 y testeo.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th>Procedimiento</th>
+  <th>Validación abril–diciembre</th>
+  <th>Diciembre</th>
+  <th>Testeo enero–abril</th>
+  <th>Cambio testeo/diciembre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,015836</td>
+  <td>0,013977</td>
+  <td>0,016057</td>
+  <td>14,88 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td>A</td>
+  <td>0,016018</td>
+  <td>0,014330</td>
+  <td>0,016165</td>
+  <td>12,81 %</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td>B</td>
+  <td>0,018563</td>
+  <td>0,014854</td>
+  <td>0,016303</td>
+  <td>9,75 %</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td>B</td>
+  <td>0,017232</td>
+  <td>0,015940</td>
+  <td>0,017429</td>
+  <td>9,34 %</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td>B</td>
+  <td>0,019650</td>
+  <td>0,015945</td>
+  <td>0,017785</td>
+  <td>11,54 %</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017208</td>
+  <td>0,016191</td>
+  <td>0,017786</td>
+  <td>9,85 %</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018764</td>
+  <td>0,015557</td>
+  <td>0,017809</td>
+  <td>14,48 %</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019897</td>
+  <td>0,015023</td>
+  <td>0,017911</td>
+  <td>19,22 %</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td>B</td>
+  <td>0,018735</td>
+  <td>0,015561</td>
+  <td>0,017919</td>
+  <td>15,15 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,017492</td>
+  <td>0,014186</td>
+  <td>0,017920</td>
+  <td>26,32 %</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,018357</td>
+  <td>0,017364</td>
+  <td>0,018019</td>
+  <td>3,77 %</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos</td>
+  <td>A</td>
+  <td>0,017664</td>
+  <td>0,014524</td>
+  <td>0,018026</td>
+  <td>24,11 %</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td>A</td>
+  <td>0,018527</td>
+  <td>0,017513</td>
+  <td>0,018205</td>
+  <td>3,95 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,020341</td>
+  <td>0,018188</td>
+  <td>0,018245</td>
+  <td>0,32 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td>A</td>
+  <td>0,021852</td>
+  <td>0,018216</td>
+  <td>0,018349</td>
+  <td>0,73 %</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td>A</td>
+  <td>0,021712</td>
+  <td>0,015148</td>
+  <td>0,018381</td>
+  <td>21,34 %</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td>A</td>
+  <td>0,019131</td>
+  <td>0,015813</td>
+  <td>0,018583</td>
+  <td>17,52 %</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,020064</td>
+  <td>0,015588</td>
+  <td>0,018720</td>
+  <td>20,09 %</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td>B</td>
+  <td>0,018598</td>
+  <td>0,015974</td>
+  <td>0,018818</td>
+  <td>17,81 %</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td>B</td>
+  <td>0,019344</td>
+  <td>0,016966</td>
+  <td>0,018981</td>
+  <td>11,88 %</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td>A</td>
+  <td>0,020249</td>
+  <td>0,015589</td>
+  <td>0,019043</td>
+  <td>22,16 %</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td>A</td>
+  <td>0,018352</td>
+  <td>0,017335</td>
+  <td>0,019071</td>
+  <td>10,01 %</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td>A</td>
+  <td>0,019723</td>
+  <td>0,016261</td>
+  <td>0,019084</td>
+  <td>17,36 %</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019647</td>
+  <td>0,016671</td>
+  <td>0,019117</td>
+  <td>14,67 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,020021</td>
+  <td>0,014721</td>
+  <td>0,019356</td>
+  <td>31,48 %</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019221</td>
+  <td>0,016324</td>
+  <td>0,019402</td>
+  <td>18,86 %</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td>B</td>
+  <td>0,019891</td>
+  <td>0,018448</td>
+  <td>0,019463</td>
+  <td>5,50 %</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td>A</td>
+  <td>0,019535</td>
+  <td>0,016458</td>
+  <td>0,019646</td>
+  <td>19,37 %</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td>B</td>
+  <td>0,020623</td>
+  <td>0,016732</td>
+  <td>0,019716</td>
+  <td>17,84 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,022921</td>
+  <td>0,018442</td>
+  <td>0,019801</td>
+  <td>7,37 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td>A</td>
+  <td>0,022928</td>
+  <td>0,018509</td>
+  <td>0,020089</td>
+  <td>8,54 %</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td>A</td>
+  <td>0,020914</td>
+  <td>0,015437</td>
+  <td>0,020201</td>
+  <td>30,85 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,022845</td>
+  <td>0,018188</td>
+  <td>0,020208</td>
+  <td>11,11 %</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td>B</td>
+  <td>0,020744</td>
+  <td>0,017080</td>
+  <td>0,020336</td>
+  <td>19,06 %</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td>B</td>
+  <td>0,020743</td>
+  <td>0,017083</td>
+  <td>0,020353</td>
+  <td>19,14 %</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td>A</td>
+  <td>0,023863</td>
+  <td>0,018799</td>
+  <td>0,020449</td>
+  <td>8,78 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td>C</td>
+  <td>0,019970</td>
+  <td>0,014802</td>
+  <td>0,020654</td>
+  <td>39,53 %</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td>A</td>
+  <td>0,021986</td>
+  <td>0,014939</td>
+  <td>0,021219</td>
+  <td>42,04 %</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td>B</td>
+  <td>0,021828</td>
+  <td>0,019354</td>
+  <td>0,022761</td>
+  <td>17,61 %</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td>B</td>
+  <td>0,025047</td>
+  <td>0,019099</td>
+  <td>0,025044</td>
+  <td>31,13 %</td>
+</tr>
+<tr>
+  <td>Referencia estacional</td>
+  <td>Referencia</td>
+  <td>0,043225</td>
+  <td>0,032510</td>
+  <td>0,048657</td>
+  <td>49,67 %</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: elaboración propia. Cambio relativo = 100 × (pérdida de testeo / pérdida de diciembre − 1).</em></p>
+<h2 id="sec-s5-2">S5.2 Trayectorias mensuales de pérdida por procedimiento</h2>
+<p>Las figuras siguientes reúnen las predicciones fuera de muestra de abril–diciembre de 2023 y enero–abril de 2024. Enero–marzo de 2023 conforman la historia inicial de entrenamiento y no se incorporan como errores de ajuste a estas curvas. Se presentan la pérdida pinball en kW y su versión dividida por la media mensual del valor absoluto de la demanda. Cada línea promedia las métricas entre ejecuciones, sin promediar previamente las predicciones. El área sombreada corresponde al testeo.</p>
+<p class="caption" id="figura-s5-1"><strong>Figura S5.1. Evolución mensual de la pérdida pinball del procedimiento A.</strong></p>
+<p class="image"><img src="assets/91db5eabe747.png" alt="Figura S5.1. Evolución mensual de la pérdida pinball del procedimiento A." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> Arriba: pérdida en kW. Abajo: pérdida normalizada. La línea vertical separa validación y testeo.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s5-2"><strong>Figura S5.2. Evolución mensual de la pérdida pinball del procedimiento B.</strong></p>
+<p class="image"><img src="assets/3cce63ab8bd7.png" alt="Figura S5.2. Evolución mensual de la pérdida pinball del procedimiento B." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> Arriba: pérdida en kW. Abajo: pérdida normalizada. La línea vertical separa validación y testeo.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p class="caption" id="figura-s5-3"><strong>Figura S5.3. Evolución mensual de la pérdida pinball del procedimiento C.</strong></p>
+<p class="image"><img src="assets/1aa4e5f583c3.png" alt="Figura S5.3. Evolución mensual de la pérdida pinball del procedimiento C." loading="lazy" title="Ampliar imagen" tabindex="0"></p>
+<p class="note"><strong>Nota.</strong> Arriba: pérdida en kW. Abajo: pérdida normalizada. La línea vertical separa validación y testeo.</p>
+<p class="source"><em>Fuente: elaboración propia a partir de las predicciones guardadas.</em></p>
+<p>El denominador mensual es común a todos los modelos: la pérdida cruda y la normalizada producen el mismo orden dentro de cada mes. Entre meses, la variación del denominador modifica la escala relativa de las pérdidas.</p>
+<h2 id="sec-s5-3">S5.3 Ensayos de las búsquedas</h2>
+<p>El <a href="s5.html#cuadro-s5-2" class="crossref">Cuadro S5.2</a> presenta los ensayos registrados durante la búsqueda. Un ensayo completo evalúa todos los meses previstos; uno podado se detiene según el desempeño parcial y la regla de la Sección 4.7.2. Los ensayos fallidos se informan por separado. Las repeticiones de las configuraciones elegidas con otras semillas y los reajustes mensuales posteriores corresponden a otras etapas y quedan fuera de estos recuentos.</p>
+<p class="caption" id="cuadro-s5-2"><strong>Cuadro S5.2. Ensayos completos, podados y fallidos por modelo y procedimiento.</strong></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+  <th>Modelo</th>
+  <th style="text-align:right">Vía</th>
+  <th style="text-align:right">Completos</th>
+  <th style="text-align:right">Podados</th>
+  <th style="text-align:right">Fallidos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>DLinear cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">46</td>
+  <td style="text-align:right">9</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>LightGBM cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">58</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>LSTM cuantílica</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">37</td>
+  <td style="text-align:right">18</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">60</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>TiDE cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">56</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Transformer cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">57</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>TSMixer cuantílico</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">68</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>DLinear + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">68</td>
+  <td style="text-align:right">14</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>LightGBM + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>LSTM + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">45</td>
+  <td style="text-align:right">10</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NLinear + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">61</td>
+  <td style="text-align:right">19</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Regresión lineal + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">79</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Prophet + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">7</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Ridge + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">65</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>TiDE + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Transformer + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">66</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>TSMixer + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">61</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NHITS</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">53</td>
+  <td style="text-align:right">2</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Elastic Net + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">54</td>
+  <td style="text-align:right">1</td>
+  <td style="text-align:right">1</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">60</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica</td>
+  <td style="text-align:right">A</td>
+  <td style="text-align:right">51</td>
+  <td style="text-align:right">4</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NHITS puntual + conforme</td>
+  <td style="text-align:right">B</td>
+  <td style="text-align:right">50</td>
+  <td style="text-align:right">5</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión nativa + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">57</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>DLinear + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">70</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>LightGBM + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">70</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>LSTM + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">91</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NGBoost con historia del origen + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">100</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>TiDE + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">80</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Transformer + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">67</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>TSMixer + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Chronos-2 LoRA + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">83</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Chronos-2 con pesos fijos + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">67</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NHITS + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">67</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Ridge bayesiana con dispersión contextual + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>NGBoost con referencias alineadas + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">68</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+<tr>
+  <td>Regresión lineal cuantílica + calibración de cuantiles</td>
+  <td style="text-align:right">C</td>
+  <td style="text-align:right">55</td>
+  <td style="text-align:right">0</td>
+  <td style="text-align:right">0</td>
+</tr>
+</tbody>
+</table>
+</div><p class="source"><em>Fuente: registros de los estudios de optimización.</em></p>
+</div><div class="page-footer">Las referencias a los capítulos 1–6 corresponden al cuerpo del trabajo. Los enlaces entre anexos y suplemento permiten consultar sus ampliaciones. Todos los resultados conservan sus períodos y configuraciones originales.</div></article></main></div><dialog id="zoom"><button>Cerrar imagen</button><img alt=""></dialog><script src="lectura.js"></script></body></html>
