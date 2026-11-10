@@ -8,3 +8,13 @@ document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{document.body
 document.getElementById('section-select')?.addEventListener('change',e=>{if(e.target.value){const el=document.getElementById(e.target.value);if(el.classList.contains('unchanged')){document.body.classList.remove('hide-unchanged');document.getElementById('unchanged').checked=true}el.scrollIntoView({behavior:'smooth'})}});
 
 document.querySelectorAll('[data-filter-tables]').forEach(input=>input.addEventListener('input',()=>{const q=input.value.trim().toLocaleLowerCase('es');document.querySelectorAll('.paper table tbody tr').forEach(row=>row.hidden=q&&!row.textContent.toLocaleLowerCase('es').includes(q));}));
+document.querySelectorAll('header .brand').forEach(encabezado => {
+  encabezado.innerHTML = `
+    <span style="display:block">
+      Pronóstico probabilístico de demanda neta residencial con generación fotovoltaica distribuida
+    </span>
+    <span style="display:block;font-weight:400;margin-top:4px">
+      Sebastián Nicolás González · Material complementario
+    </span>
+  `;
+});
